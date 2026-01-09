@@ -1,0 +1,26 @@
+{
+  "contact": {
+    "title": "Contact",
+    "breadcrumb": "Contact",
+    "subtitle": "We're always here to help you",
+    "form": {
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully!",
+      "error": "An error occurred. Please try again."
+    },
+    "info": {
+      "title": "Contact Information",
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Working Hours"
+    }
+  }
+}
+

@@ -1,0 +1,26 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "view": "Xem",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "continue": "Tiếp tục"
+  },
+  "language": {
+    "title": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
+  }
+}
+

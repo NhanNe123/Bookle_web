@@ -1,0 +1,26 @@
+{
+  "contact": {
+    "title": "Liên hệ",
+    "breadcrumb": "Liên hệ",
+    "subtitle": "Chúng tôi luôn sẵn sàng hỗ trợ bạn",
+    "form": {
+      "name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "subject": "Chủ đề",
+      "message": "Nội dung tin nhắn",
+      "send": "Gửi tin nhắn",
+      "sending": "Đang gửi...",
+      "success": "Gửi tin nhắn thành công!",
+      "error": "Có lỗi xảy ra. Vui lòng thử lại."
+    },
+    "info": {
+      "title": "Thông tin liên hệ",
+      "address": "Địa chỉ",
+      "phone": "Điện thoại",
+      "email": "Email",
+      "hours": "Giờ làm việc"
+    }
+  }
+}
+

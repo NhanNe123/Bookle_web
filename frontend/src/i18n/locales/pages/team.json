@@ -1,0 +1,23 @@
+{
+  "team": {
+    "title": "Tác giả",
+    "breadcrumb": "Tác giả",
+    "searchPlaceholder": "Tìm kiếm tác giả...",
+    "sectionTitle": "Tác giả của chúng tôi",
+    "sectionSubtitle": "Gặp gỡ những tác giả tài năng đã đóng góp những tác phẩm văn học xuất sắc cho nền văn học Việt Nam và thế giới.",
+    "noAuthors": "Không tìm thấy tác giả nào",
+    "noAuthorsDescription": "Thử tìm kiếm với từ khóa khác",
+    "publishedBooks": "Published Books",
+    "author": "Author",
+    "details": {
+      "title": "Chi tiết tác giả",
+      "aboutAuthor": "Về tác giả",
+      "awards": "Giải thưởng & Thành tựu",
+      "publishedBooks": "Sách đã xuất bản",
+      "noBooks": "Chưa có sách nào",
+      "noBooksDescription": "Tác giả này chưa có sách được đăng tải",
+      "backToList": "Quay lại danh sách tác giả"
+    }
+  }
+}
+

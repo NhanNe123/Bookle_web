@@ -1,0 +1,18 @@
+{
+  "home": {
+    "hero": {
+      "title": "Get Your New Book",
+      "subtitle": "With The Best Price",
+      "shopNow": "Shop Now"
+    },
+    "featured": {
+      "title": "Featured Products",
+      "subtitle": "Bestsellers"
+    },
+    "new": {
+      "title": "New Products",
+      "subtitle": "Latest Books"
+    }
+  }
+}
+

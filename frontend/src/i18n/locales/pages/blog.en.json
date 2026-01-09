@@ -1,0 +1,18 @@
+{
+  "blog": {
+    "title": "Blog",
+    "breadcrumb": "Blog",
+    "sectionTitle": "Our Blog",
+    "sectionSubtitle": "Discover great articles about books, reviews of literary works, and insights shared by literature experts.",
+    "by": "By",
+    "views": "views",
+    "readMore": "Read More",
+    "noPosts": "No posts found",
+    "noPostsDescription": "No posts have been published yet",
+    "search": "Search",
+    "searchPlaceholder": "Search posts...",
+    "categories": "Categories",
+    "recentPosts": "Recent Posts"
+  }
+}
+

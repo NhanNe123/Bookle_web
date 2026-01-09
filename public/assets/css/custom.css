@@ -1,0 +1,34 @@
+/* Card ảnh sản phẩm – giống template */
+.shop-box-items .book-thumb{
+    aspect-ratio: 4 / 5;   /* tỉ lệ 4:5 như demo */
+    width: 100%;
+    overflow: hidden;
+    display: block;
+  }
+  
+  /* Đảm bảo thẻ a/img chiếm full khung */
+  .shop-box-items .book-thumb a,
+  .shop-box-items .book-thumb img{
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* Ảnh fill khung, cắt dư cho đều */
+  .shop-box-items .book-thumb img{
+    object-fit: cover;
+    /* Nếu main.css đang giới hạn kích thước, ghi đè luôn: */
+    max-width: none !important;
+    max-height: none !important;
+  }
+
+/* Fix breadcrumb divider - xóa URL gramentheme.com */
+.breadcrumb {
+  --bs-breadcrumb-divider: "/" !important;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: var(--bs-breadcrumb-divider, "/") !important;
+  color: var(--bs-breadcrumb-divider-color, #6c757d);
+}
+  

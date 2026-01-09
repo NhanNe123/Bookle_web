@@ -1,0 +1,12 @@
+{
+  "errors": {
+    "notFound": {
+      "title": "Trang không tìm thấy",
+      "description": "Xin lỗi, trang bạn đang tìm kiếm không tồn tại.",
+      "goHome": "Về trang chủ"
+    },
+    "generic": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+    "network": "Lỗi kết nối. Vui lòng kiểm tra kết nối mạng của bạn."
+  }
+}
+

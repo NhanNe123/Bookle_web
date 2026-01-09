@@ -1,0 +1,18 @@
+{
+  "home": {
+    "hero": {
+      "title": "Mua Sách Mới",
+      "subtitle": "Với Giá Tốt Nhất",
+      "shopNow": "Mua ngay"
+    },
+    "featured": {
+      "title": "Sản phẩm nổi bật",
+      "subtitle": "Sách bán chạy"
+    },
+    "new": {
+      "title": "Sản phẩm mới",
+      "subtitle": "Sách mới nhất"
+    }
+  }
+}
+

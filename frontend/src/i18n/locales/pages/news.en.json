@@ -1,0 +1,23 @@
+{
+  "news": {
+    "title": "News",
+    "breadcrumb": "News",
+    "sectionTitle": "Our Latest News",
+    "sectionSubtitle": "Stay updated with the latest news about books, literary events, and special activities from our store.",
+    "allCategories": "All",
+    "by": "By",
+    "readMore": "Read More",
+    "noPosts": "No posts found",
+    "noPostsDescription": "No posts have been published yet",
+    "details": {
+      "title": "News Details",
+      "backToList": "Back to News",
+      "share": "Share",
+      "relatedPosts": "Related Posts",
+      "tags": "Tags",
+      "notFound": "Post not found",
+      "views": "views"
+    }
+  }
+}
+

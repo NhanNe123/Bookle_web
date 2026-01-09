@@ -1,0 +1,102 @@
+{
+  "about": {
+    "title": "About Us",
+    "breadcrumb": "About Us",
+    "subtitle": "Bookle - Leading Online Bookstore",
+    "mainTitle": "28 Years Journey with Vietnamese Readers",
+    "description1": "Founded in 1995, Bookle has become one of the most trusted and beloved online bookstores in Vietnam. With over 28 years of experience in publishing and book distribution, we are proud to bring readers quality works from home and abroad.",
+    "description2": "From humble beginnings as a small bookstore in Hanoi, Bookle has now grown into a nationwide distribution system with over 500,000 loyal customers and more than 50,000 diverse book titles.",
+    "exploreProducts": "Explore Products",
+    "stats": {
+      "founded": "Founded",
+      "experience": "Years of Experience",
+      "customers": "Customers",
+      "books": "Books"
+    },
+    "mission": {
+      "title": "Mission",
+      "description": "Our mission is to bring knowledge to everyone, contributing to building a learning and developing society. We believe that each book contains a wonderful world, and our job is to help you discover those worlds.",
+      "item1": "Disseminate knowledge and reading culture",
+      "item2": "Support education and research development",
+      "item3": "Connect readers with valuable works"
+    },
+    "vision": {
+      "title": "Vision",
+      "description": "We aspire to become the leading online book platform in Vietnam, where everyone can easily find and own their favorite books. We aim to build a vibrant and growing reading community.",
+      "item1": "Become Vietnam's #1 online bookstore",
+      "item2": "Expand book catalog to 100,000 titles",
+      "item3": "Serve over 1 million customers by 2030"
+    },
+    "values": {
+      "title": "What Makes Bookle",
+      "subtitle": "Core Values",
+      "description": "These values have accompanied us throughout our 28-year journey",
+      "passion": {
+        "title": "Passion for Books",
+        "description": "We don't just sell books, we nurture a love of literature and knowledge for everyone."
+      },
+      "quality": {
+        "title": "Top Quality",
+        "description": "Each book is carefully selected, ensuring the best content and printing quality."
+      },
+      "trust": {
+        "title": "Long-standing Trust",
+        "description": "With over 28 years of operation, we are proud to be a trusted partner of hundreds of thousands of readers."
+      },
+      "service": {
+        "title": "Dedicated Service",
+        "description": "Professional staff, always ready to consult and support customers in the best way."
+      },
+      "delivery": {
+        "title": "Fast Delivery",
+        "description": "Nationwide delivery service, ensuring books reach you quickly and safely."
+      },
+      "price": {
+        "title": "Reasonable Prices",
+        "description": "Commitment to bring quality books at the best prices on the market."
+      }
+    },
+    "timeline": {
+      "title": "Important Milestones",
+      "subtitle": "Development Journey",
+      "1995": {
+        "title": "Bookle Founded",
+        "description": "Started with a small bookstore in Hanoi's Old Quarter, specializing in literature and textbooks."
+      },
+      "2005": {
+        "title": "System Expansion",
+        "description": "Opened 5 more branches in major cities: Hanoi, Ho Chi Minh City, Da Nang, Hue and Hai Phong."
+      },
+      "2015": {
+        "title": "Digital Transformation",
+        "description": "Launched online bookstore website, marking an important milestone for the company."
+      },
+      "2020": {
+        "title": "500K Customer Milestone",
+        "description": "Surpassed 500,000 loyal customers and became one of the leading online bookstores."
+      },
+      "2023": {
+        "title": "Present & Future",
+        "description": "Continue to grow with over 50,000 book titles and commitment to bring the best shopping experience to Vietnamese readers."
+      }
+    },
+    "commitment": {
+      "title": "Our Commitment",
+      "description": "With over 28 years of experience, Bookle commits to bringing you high-quality books, reasonable prices and dedicated customer service. We always consider customers as the center and continuously improve to serve you better every day.",
+      "original": {
+        "title": "Original Books",
+        "description": "100% official books from publishers"
+      },
+      "return": {
+        "title": "Easy Returns",
+        "description": "Flexible return policy within 7 days"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "Consulting team always ready to assist you"
+      },
+      "contactUs": "Contact Us"
+    }
+  }
+}
+

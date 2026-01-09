@@ -1,0 +1,18 @@
+{
+  "blog": {
+    "title": "Blog",
+    "breadcrumb": "Blog",
+    "sectionTitle": "Our Blog",
+    "sectionSubtitle": "Khám phá những bài viết hay về sách, đánh giá tác phẩm và chia sẻ kiến thức từ các chuyên gia văn học.",
+    "by": "Bởi",
+    "views": "lượt xem",
+    "readMore": "Đọc thêm",
+    "noPosts": "Không có bài viết nào",
+    "noPostsDescription": "Chưa có bài viết nào được đăng tải",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm kiếm bài viết...",
+    "categories": "Danh mục",
+    "recentPosts": "Bài viết gần đây"
+  }
+}
+

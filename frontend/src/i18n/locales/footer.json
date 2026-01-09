@@ -1,0 +1,36 @@
+{
+  "footer": {
+    "contactInfo": {
+      "callUs": "Gọi chúng tôi 24/7",
+      "makeQuote": "Gửi yêu cầu báo giá",
+      "openingHour": "Giờ mở cửa",
+      "location": "Địa chỉ",
+      "openingHours": "Chủ Nhật - Thứ Sáu: 9h - 18h"
+    },
+    "about": {
+      "description": "Bookle là hiệu sách trực tuyến hàng đầu tại Việt Nam, chuyên cung cấp các đầu sách đa dạng từ trong và ngoài nước với chất lượng cao và giá cả hợp lý."
+    },
+    "customerSupport": {
+      "title": "Hỗ trợ khách hàng",
+      "storeList": "Danh sách cửa hàng",
+      "openingHours": "Giờ mở cửa",
+      "contactUs": "Liên hệ chúng tôi",
+      "returnPolicy": "Chính sách đổi trả"
+    },
+    "categories": {
+      "title": "Danh mục",
+      "novel": "Tiểu thuyết",
+      "poetry": "Thơ ca",
+      "political": "Chính trị",
+      "history": "Lịch sử"
+    },
+    "newsletter": {
+      "title": "Bản tin",
+      "description": "Đăng ký nhận bản tin hàng tuần để nhận cập nhật mới nhất.",
+      "placeholder": "Nhập địa chỉ email",
+      "submit": "Gửi"
+    },
+    "copyright": "© Tất cả bản quyền 2024 thuộc về"
+  }
+}
+

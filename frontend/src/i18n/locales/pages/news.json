@@ -1,0 +1,23 @@
+{
+  "news": {
+    "title": "Tin tức",
+    "breadcrumb": "Tin tức",
+    "sectionTitle": "Tin tức mới nhất",
+    "sectionSubtitle": "Cập nhật những tin tức mới nhất về sách, sự kiện văn học và các hoạt động đặc biệt từ cửa hàng của chúng tôi.",
+    "allCategories": "Tất cả",
+    "by": "Bởi",
+    "readMore": "Đọc thêm",
+    "noPosts": "Không có bài viết nào",
+    "noPostsDescription": "Chưa có bài viết nào được đăng tải",
+    "details": {
+      "title": "Chi tiết tin tức",
+      "backToList": "Quay lại danh sách",
+      "share": "Chia sẻ",
+      "relatedPosts": "Bài viết liên quan",
+      "tags": "Thẻ",
+      "notFound": "Không tìm thấy bài viết",
+      "views": "lượt xem"
+    }
+  }
+}
+

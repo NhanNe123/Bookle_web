@@ -1,0 +1,52 @@
+{
+  "auth": {
+    "login": {
+      "title": "Welcome Back!",
+      "email": "Email Address",
+      "password": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up Now",
+      "loginButton": "Login",
+      "loggingIn": "Logging in...",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithFacebook": "Continue with Facebook",
+      "or": "Or"
+    },
+    "register": {
+      "title": "Create Account",
+      "name": "Full Name",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "rememberMe": "Remember me",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign In Now",
+      "registerButton": "Register",
+      "registering": "Registering...",
+      "continueWithGoogle": "Continue with Google",
+      "continueWithFacebook": "Continue with Facebook",
+      "or": "Or"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password?",
+      "description": "Enter your email and we'll send you a password reset link.",
+      "email": "Email Address",
+      "sendButton": "Send Reset Link",
+      "sending": "Sending...",
+      "sent": "Sent!",
+      "backToLogin": "← Back to Login"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Please enter your new password for your account.",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetButton": "Reset Password",
+      "processing": "Processing...",
+      "backToHome": "← Back to Home"
+    }
+  }
+}
+

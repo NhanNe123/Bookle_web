@@ -1,0 +1,517 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useCart } from '../../hooks/useCart';
+import { useWishlist } from '../../hooks/useWishlist';
+import { useAuth } from '../../hooks/useAuth';
+import AIChatAssistant from '../common/AIChatAssistant';
+
+const Header = ({ onToggleSidebar, onShowLogin }) => {
+  const { t, i18n } = useTranslation();
+  const { cart, getCartCount } = useCart();
+  const { wishlist, getWishlistCount } = useWishlist();
+  const { user, isAuthenticated, logout } = useAuth();
+  const cartCount = getCartCount();
+  const wishlistCount = getWishlistCount();
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
+  const languageDropdownRef = useRef(null);
+
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('bookle_language', lang);
+    setShowLanguageDropdown(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target)) {
+        setShowLanguageDropdown(false);
+      }
+    };
+
+    if (showLanguageDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLanguageDropdown]);
+
+
+  return (
+    <>
+      {/* Header Top Section */}
+      <div className="header-top-1">
+        <div className="container">
+          <div className="header-top-wrapper">
+            <ul className="contact-list">
+              <li>
+                <i className="fa-regular fa-phone"></i>
+                <a href="tel:+20866660112">038-346-1187</a>
+              </li>
+              <li>
+                <i className="far fa-envelope"></i>
+                <a href="mailto:kimhung@gmail.com">kimhung@gmail.com</a>
+              </li>
+              <li>
+                <i className="far fa-clock"></i>
+                <span>{t('header.top.workingHours')}</span>
+              </li>
+            </ul>
+            <ul className="list">
+              <li>
+                <i className="fa-solid fa-robot" style={{ color: '#fff' }}></i>
+                <button 
+                  type="button"
+                  onClick={() => setShowAIChat(true)}
+                  className="ai-contact-btn"
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    padding: 0,
+                    font: 'inherit',
+                    transition: 'color 0.3s ease'
+                  }}
+                  onMouseEnter={(e) => e.target.style.color = '#56CCF2'}
+                  onMouseLeave={(e) => e.target.style.color = '#fff'}
+                >
+                  Liên Hệ Trực Tiếp Với AI
+                </button>
+              </li>
+              {/* Language Switcher */}
+              <li>
+                <div 
+                  ref={languageDropdownRef}
+                  className="dropdown d-inline-block"
+                  style={{ position: 'relative' }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+                    className="border-0 bg-transparent"
+                    style={{
+                      color: '#fff',
+                      padding: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <i className="fa-solid fa-globe" style={{ fontSize: '16px' }}></i>
+                    <span style={{ fontSize: '14px' }}>{i18n.language === 'vi' ? 'VI' : 'EN'}</span>
+                    <i className={`fas fa-angle-down ${showLanguageDropdown ? 'rotate-180' : ''}`} style={{ 
+                      fontSize: '12px', 
+                      marginLeft: '3px',
+                      transition: 'transform 0.3s ease'
+                    }}></i>
+                  </button>
+                  {showLanguageDropdown && (
+                    <ul
+                      className="dropdown-menu show"
+                      style={{
+                        position: 'absolute',
+                        top: '100%',
+                        left: '0',
+                        marginTop: '5px',
+                        backgroundColor: '#fff',
+                        border: '1px solid #ddd',
+                        borderRadius: '4px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        minWidth: '150px',
+                        padding: '5px 0',
+                        zIndex: 1000,
+                        animation: 'fadeIn 0.2s ease-in'
+                      }}
+                    >
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => changeLanguage('vi')}
+                          style={{
+                            color: i18n.language === 'vi' ? '#3040D6' : '#333',
+                            padding: '8px 16px',
+                            background: 'transparent',
+                            border: 'none',
+                            width: '100%',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            fontWeight: i18n.language === 'vi' ? '600' : '400',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                        >
+                          <i className="fa-solid fa-check" style={{ 
+                            opacity: i18n.language === 'vi' ? 1 : 0,
+                            width: '16px'
+                          }}></i>
+                          <span>{t('language.vietnamese')}</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => changeLanguage('en')}
+                          style={{
+                            color: i18n.language === 'en' ? '#3040D6' : '#333',
+                            padding: '8px 16px',
+                            background: 'transparent',
+                            border: 'none',
+                            width: '100%',
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            fontWeight: i18n.language === 'en' ? '600' : '400',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'background-color 0.2s ease'
+                          }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                        >
+                          <i className="fa-solid fa-check" style={{ 
+                            opacity: i18n.language === 'en' ? 1 : 0,
+                            width: '16px'
+                          }}></i>
+                          <span>{t('language.english')}</span>
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
+              </li>
+              <li>
+                <i className="fa-light fa-user"></i>
+                {isAuthenticated ? (
+                  <div className="dropdown d-inline-block">
+                    <button 
+                      className="dropdown-toggle border-0 bg-transparent" 
+                      type="button" 
+                      id="userDropdown" 
+                      data-bs-toggle="dropdown"
+                      style={{ 
+                        color: '#fff',
+                        fontWeight: '500'
+                      }}
+                    >
+                      {t('header.top.welcome')}, {user?.name || user?.email}
+                    </button>
+                    <ul 
+                      className="dropdown-menu"
+                      style={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #ddd',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        minWidth: '200px'
+                      }}
+                    >
+                      <li>
+                        <Link 
+                          className="dropdown-item" 
+                          to="/profile"
+                          style={{ color: '#333', padding: '8px 16px' }}
+                        >
+                          <i className="fa-solid fa-user me-2"></i> {t('header.top.myAccount')}
+                        </Link>
+                      </li>
+                      <li>
+                        <Link 
+                          className="dropdown-item" 
+                          to="/wishlist"
+                          style={{ color: '#333', padding: '8px 16px' }}
+                        >
+                          <i className="fa-solid fa-heart me-2"></i> {t('header.top.wishlist')}
+                        </Link>
+                      </li>
+                      <li>
+                        <Link 
+                          className="dropdown-item" 
+                          to="/shop-cart"
+                          style={{ color: '#333', padding: '8px 16px' }}
+                        >
+                          <i className="fa-solid fa-shopping-cart me-2"></i> {t('header.top.cart')}
+                        </Link>
+                      </li>
+                      <li><hr className="dropdown-divider" /></li>
+                      <li>
+                        <button 
+                          className="dropdown-item" 
+                          onClick={logout}
+                          style={{ 
+                            color: '#dc3545', 
+                            padding: '8px 16px',
+                            background: 'transparent',
+                            border: 'none',
+                            width: '100%',
+                            textAlign: 'left',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <i className="fa-solid fa-right-from-bracket me-2"></i> {t('header.top.logout')}
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  <button 
+                    type="button"
+                    onClick={onShowLogin}
+                    data-bs-toggle="modal"
+                    data-bs-target="#loginModal"
+                  >
+                    {t('header.top.login')}
+                  </button>
+                )}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Sticky Header Section */}
+      <header className="header-1 sticky-header">
+        <div className="mega-menu-wrapper">
+          <div className="header-main">
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                  <div className="header-left">
+                    <div className="logo">
+                      <Link to="/" className="header-logo">
+                        <img src="/assets/img/logo/white-logo.svg" alt="logo-img" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-6 col-md-6 col-lg-8 col-xl-8 col-xxl-8">
+                  <div className="mean__menu-wrapper d-flex justify-content-center">
+                    <div className="main-menu">
+                      <nav>
+                        <ul>
+                          <li>
+                            <Link to="/">
+                              {t('header.menu.home')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/">{t('header.menu.home')}</Link></li>
+                              <li><Link to="/news">{t('header.menu.latest')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/shop">
+                              {t('header.menu.shop')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/shop">{t('header.menu.shop')}</Link></li>
+                              <li><Link to="/shop-list">{t('header.menu.shopList')}</Link></li>
+                            </ul>
+                          </li>
+                          <li className="has-dropdown">
+                            <Link to="/about">
+                              {t('header.menu.pages')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/about">{t('header.menu.about')}</Link></li>
+                              <li className="has-dropdown">
+                                <Link to="/team">
+                                  {t('header.menu.team')}
+                                  <i className="fas fa-angle-down"></i>
+                                </Link>
+                                <ul className="submenu">
+                                  <li><Link to="/team">{t('header.menu.team')}</Link></li>
+                                  <li><Link to="/team-details">{t('header.menu.teamDetails')}</Link></li>
+                                </ul>
+                              </li>
+                              <li><Link to="/faq">{t('header.menu.faq')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/news">
+                              {t('header.menu.news')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/news">{t('header.menu.news')}</Link></li>
+                              <li><Link to="/news">{t('header.menu.blog')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/contact">{t('header.menu.contact')}</Link>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                  <div className="header-right d-flex justify-content-end">
+                    <div className="menu-cart">
+                      <Link 
+                        to="/wishlist" 
+                        className="cart-icon"
+                        data-count={wishlistCount > 99 ? '99+' : wishlistCount}
+                      >
+                        <i className="fa-regular fa-heart"></i>
+                      </Link>
+                      <Link 
+                        to="/shop-cart" 
+                        className="cart-icon"
+                        data-count={cartCount > 99 ? '99+' : cartCount}
+                      >
+                        <i className="fa-regular fa-cart-shopping"></i>
+                      </Link>
+                      <div className="header-humbager ml-30">
+                        <a className="sidebar__toggle" href="#" onClick={(e) => {
+                          e.preventDefault();
+                          onToggleSidebar();
+                        }}>
+                          <div className="bar-icon-2">
+                            <img src="/assets/img/icon/icon-13.svg" alt="img" />
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Header Section */}
+      <header className="header-1">
+        <div className="mega-menu-wrapper">
+          <div className="header-main">
+            <div className="container">
+              <div className="row align-items-center">
+                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                  <div className="header-left">
+                    <div className="logo">
+                      <Link to="/" className="header-logo">
+                        <img src="/assets/img/logo/white-logo.svg" alt="logo-img" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-6 col-md-6 col-lg-8 col-xl-8 col-xxl-8">
+                  <div className="mean__menu-wrapper d-flex justify-content-center">
+                    <div className="main-menu">
+                      <nav id="mobile-menu">
+                        <ul>
+                          <li>
+                            <Link to="/">
+                              {t('header.menu.home')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/">{t('header.menu.home')}</Link></li>
+                              <li><Link to="/news">{t('header.menu.latest')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/shop">
+                              {t('header.menu.shop')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/shop">{t('header.menu.shop')}</Link></li>
+                              <li><Link to="/shop-list">{t('header.menu.shopList')}</Link></li>
+                            </ul>
+                          </li>
+                          <li className="has-dropdown">
+                            <Link to="/about">
+                              {t('header.menu.pages')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/about">{t('header.menu.about')}</Link></li>
+                              <li className="has-dropdown">
+                                <Link to="/team">
+                                  {t('header.menu.team')}
+                                  <i className="fas fa-angle-down"></i>
+                                </Link>
+                                <ul className="submenu">
+                                  <li><Link to="/team">{t('header.menu.team')}</Link></li>
+                                  <li><Link to="/team-details">{t('header.menu.teamDetails')}</Link></li>
+                                </ul>
+                              </li>
+                              <li><Link to="/faq">{t('header.menu.faq')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/news">
+                              {t('header.menu.news')}
+                              <i className="fas fa-angle-down"></i>
+                            </Link>
+                            <ul className="submenu">
+                              <li><Link to="/news">{t('header.menu.news')}</Link></li>
+                              <li><Link to="/news">{t('header.menu.blog')}</Link></li>
+                            </ul>
+                          </li>
+                          <li>
+                            <Link to="/contact">{t('header.menu.contact')}</Link>
+                          </li>
+                        </ul>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                  <div className="header-right d-flex justify-content-end">
+                    <div className="menu-cart">
+                      <Link 
+                        to="/wishlist" 
+                        className="cart-icon"
+                        data-count={wishlistCount > 99 ? '99+' : wishlistCount}
+                      >
+                        <i className="fa-regular fa-heart"></i>
+                      </Link>
+                      <Link 
+                        to="/shop-cart" 
+                        className="cart-icon"
+                        data-count={cartCount > 99 ? '99+' : cartCount}
+                      >
+                        <i className="fa-regular fa-cart-shopping"></i>
+                      </Link>
+                      <div className="header-humbager ml-30">
+                        <a className="sidebar__toggle" href="#" onClick={(e) => {
+                          e.preventDefault();
+                          onToggleSidebar();
+                        }}>
+                          <div className="bar-icon-2">
+                            <img src="/assets/img/icon/icon-13.svg" alt="img" />
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* AI Chat Assistant */}
+      <AIChatAssistant 
+        isOpenExternal={showAIChat} 
+        onClose={() => setShowAIChat(false)} 
+      />
+    </>
+  );
+};
+
+export default Header;

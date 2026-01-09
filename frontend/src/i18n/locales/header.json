@@ -1,0 +1,35 @@
+{
+  "header": {
+    "top": {
+      "workingHours": "Thứ Hai - Thứ Sáu, 09am -05pm",
+      "directContact": "Liên hệ trực tiếp",
+      "welcome": "Xin chào",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "logout": "Đăng xuất",
+      "myAccount": "Tài khoản của tôi",
+      "wishlist": "Yêu thích",
+      "cart": "Giỏ hàng"
+    },
+    "menu": {
+      "home": "Trang chủ",
+      "shop": "Cửa hàng",
+      "pages": "Trang",
+      "about": "Về chúng tôi",
+      "team": "Tác giả",
+      "teamDetails": "Hồ sơ tác giả",
+      "faq": "Câu hỏi thường gặp",
+      "news": "Tin tức",
+      "blog": "Blog",
+      "contact": "Liên hệ",
+      "shopList": "Danh sách sách",
+      "latest": "Mới nhất"
+    },
+    "search": {
+      "placeholder": "Tìm kiếm...",
+      "author": "Tác giả",
+      "category": "Danh mục"
+    }
+  }
+}
+

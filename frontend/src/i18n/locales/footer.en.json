@@ -1,0 +1,36 @@
+{
+  "footer": {
+    "contactInfo": {
+      "callUs": "Call Us 24/7",
+      "makeQuote": "Make a Quote",
+      "openingHour": "Opening Hour",
+      "location": "Location",
+      "openingHours": "Sunday - Friday: 9 AM - 6 PM"
+    },
+    "about": {
+      "description": "Bookle is the leading online bookstore in Vietnam, specializing in providing diverse book titles from home and abroad with high quality and reasonable prices."
+    },
+    "customerSupport": {
+      "title": "Customer Support",
+      "storeList": "Store List",
+      "openingHours": "Opening Hours",
+      "contactUs": "Contact Us",
+      "returnPolicy": "Return Policy"
+    },
+    "categories": {
+      "title": "Categories",
+      "novel": "Novel Books",
+      "poetry": "Poetry Books",
+      "political": "Political Books",
+      "history": "History Books"
+    },
+    "newsletter": {
+      "title": "Newsletter",
+      "description": "Sign up to receive our weekly newsletter to get the latest updates.",
+      "placeholder": "Enter Email Address",
+      "submit": "Subscribe"
+    },
+    "copyright": "© All Copyright 2024 by"
+  }
+}
+

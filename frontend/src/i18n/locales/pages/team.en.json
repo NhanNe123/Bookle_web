@@ -1,0 +1,23 @@
+{
+  "team": {
+    "title": "Authors",
+    "breadcrumb": "Authors",
+    "searchPlaceholder": "Search authors...",
+    "sectionTitle": "Our Author",
+    "sectionSubtitle": "Meet talented authors who have contributed outstanding literary works to Vietnamese and world literature.",
+    "noAuthors": "No authors found",
+    "noAuthorsDescription": "Try searching with different keywords",
+    "publishedBooks": "Published Books",
+    "author": "Author",
+    "details": {
+      "title": "Author Details",
+      "aboutAuthor": "About Author",
+      "awards": "Awards & Achievements",
+      "publishedBooks": "Published Books",
+      "noBooks": "No Books Available",
+      "noBooksDescription": "This author hasn't published any books yet.",
+      "backToList": "Back to Authors List"
+    }
+  }
+}
+

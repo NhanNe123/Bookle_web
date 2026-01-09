@@ -1,0 +1,35 @@
+{
+  "header": {
+    "top": {
+      "workingHours": "Monday - Friday, 09am -05pm",
+      "directContact": "Direct Contact",
+      "welcome": "Welcome",
+      "login": "Login",
+      "register": "Register",
+      "logout": "Logout",
+      "myAccount": "My Account",
+      "wishlist": "Wishlist",
+      "cart": "Cart"
+    },
+    "menu": {
+      "home": "Home",
+      "shop": "Shop",
+      "pages": "Pages",
+      "about": "About Us",
+      "team": "Authors",
+      "teamDetails": "Author Profile",
+      "faq": "FAQ",
+      "news": "News",
+      "blog": "Blog",
+      "contact": "Contact",
+      "shopList": "Book List",
+      "latest": "Latest"
+    },
+    "search": {
+      "placeholder": "Search...",
+      "author": "Author",
+      "category": "Category"
+    }
+  }
+}
+

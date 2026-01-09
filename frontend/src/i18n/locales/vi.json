@@ -1,0 +1,292 @@
+{
+  "header": {
+    "top": {
+      "workingHours": "Thứ Hai - Thứ Sáu, 09am -05pm",
+      "directContact": "Liên hệ trực tiếp",
+      "welcome": "Xin chào",
+      "login": "Đăng nhập",
+      "register": "Đăng ký",
+      "logout": "Đăng xuất",
+      "myAccount": "Tài khoản của tôi",
+      "wishlist": "Yêu thích",
+      "cart": "Giỏ hàng"
+    },
+    "menu": {
+      "home": "Trang chủ",
+      "shop": "Cửa hàng",
+      "pages": "Trang",
+      "about": "Về chúng tôi",
+      "team": "Tác giả",
+      "teamDetails": "Hồ sơ tác giả",
+      "faq": "Câu hỏi thường gặp",
+      "news": "Tin tức",
+      "blog": "Blog",
+      "contact": "Liên hệ",
+      "shopList": "Danh sách sách",
+      "latest": "Mới nhất"
+    },
+    "search": {
+      "placeholder": "Tìm kiếm...",
+      "author": "Tác giả",
+      "category": "Danh mục"
+    }
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "view": "Xem",
+    "add": "Thêm",
+    "remove": "Xóa",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "continue": "Tiếp tục"
+  },
+  "language": {
+    "title": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
+  },
+  "auth": {
+    "login": {
+      "title": "Chào mừng trở lại!",
+      "email": "Địa chỉ Email",
+      "password": "Mật khẩu",
+      "rememberMe": "Ghi nhớ đăng nhập",
+      "forgotPassword": "Quên mật khẩu?",
+      "noAccount": "Chưa có tài khoản?",
+      "signUp": "Đăng ký ngay",
+      "loginButton": "Đăng nhập",
+      "loggingIn": "Đang đăng nhập...",
+      "continueWithGoogle": "Tiếp tục với Google",
+      "continueWithFacebook": "Tiếp tục với Facebook",
+      "or": "Hoặc"
+    },
+    "register": {
+      "title": "Tạo tài khoản",
+      "name": "Họ và tên",
+      "email": "Địa chỉ Email",
+      "password": "Mật khẩu",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "rememberMe": "Ghi nhớ đăng nhập",
+      "hasAccount": "Đã có tài khoản?",
+      "signIn": "Đăng nhập ngay",
+      "registerButton": "Đăng ký",
+      "registering": "Đang đăng ký...",
+      "continueWithGoogle": "Tiếp tục với Google",
+      "continueWithFacebook": "Tiếp tục với Facebook",
+      "or": "Hoặc"
+    },
+    "forgotPassword": {
+      "title": "Quên mật khẩu?",
+      "description": "Nhập email của bạn và chúng tôi sẽ gửi link đặt lại mật khẩu.",
+      "email": "Địa chỉ Email",
+      "sendButton": "Gửi link đặt lại",
+      "sending": "Đang gửi...",
+      "sent": "Đã gửi!",
+      "backToLogin": "← Quay lại đăng nhập"
+    },
+    "resetPassword": {
+      "title": "Đặt lại mật khẩu",
+      "description": "Vui lòng nhập mật khẩu mới cho tài khoản của bạn.",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu",
+      "resetButton": "Đặt lại mật khẩu",
+      "processing": "Đang xử lý...",
+      "backToHome": "← Về trang chủ"
+    }
+  },
+  "shop": {
+    "title": "Cửa hàng",
+    "addToCart": "Thêm vào giỏ",
+    "buyNow": "Mua ngay",
+    "addToWishlist": "Thêm vào yêu thích",
+    "removeFromWishlist": "Xóa khỏi yêu thích",
+    "inStock": "Còn hàng",
+    "outOfStock": "Hết hàng",
+    "price": "Giá",
+    "originalPrice": "Giá gốc",
+    "discount": "Giảm",
+    "quantity": "Số lượng",
+    "total": "Tổng cộng",
+    "cart": {
+      "title": "Giỏ hàng",
+      "empty": "Giỏ hàng trống",
+      "emptyDescription": "Bạn chưa có sản phẩm nào trong giỏ hàng",
+      "explore": "Khám phá sản phẩm",
+      "checkout": "Thanh toán",
+      "continueShopping": "Tiếp tục mua sắm"
+    },
+    "wishlist": {
+      "title": "Danh sách yêu thích",
+      "empty": "Danh sách yêu thích trống",
+      "emptyDescription": "Bạn chưa có sản phẩm nào trong danh sách yêu thích",
+      "explore": "Khám phá sản phẩm",
+      "addToCart": "Thêm vào giỏ hàng"
+    }
+  },
+  "about": {
+    "title": "Về Chúng Tôi",
+    "breadcrumb": "Về chúng tôi",
+    "subtitle": "Bookle - Hiệu sách trực tuyến hàng đầu",
+    "mainTitle": "Hành trình 28 năm đồng hành cùng độc giả Việt Nam",
+    "description1": "Được thành lập vào năm 1995, Bookle đã trở thành một trong những hiệu sách trực tuyến uy tín và được yêu thích nhất tại Việt Nam. Với hơn 28 năm kinh nghiệm trong ngành xuất bản và phân phối sách, chúng tôi tự hào mang đến cho bạn đọc những tác phẩm chất lượng từ trong và ngoài nước.",
+    "description2": "Từ những ngày đầu chỉ là một cửa hàng sách nhỏ tại Hà Nội, đến nay Bookle đã phát triển thành một hệ thống phân phối sách rộng khắp với hơn 500.000 khách hàng thân thiết và hơn 50.000 đầu sách đa dạng các thể loại.",
+    "exploreProducts": "Khám phá sản phẩm",
+    "stats": {
+      "founded": "Thành lập",
+      "experience": "Năm kinh nghiệm",
+      "customers": "Khách hàng",
+      "books": "Đầu sách"
+    },
+    "mission": {
+      "title": "Sứ Mệnh",
+      "description": "Sứ mệnh của chúng tôi là mang tri thức đến với mọi người, góp phần xây dựng một xã hội học tập và phát triển. Chúng tôi tin rằng mỗi cuốn sách đều chứa đựng một thế giới kỳ diệu, và việc của chúng tôi là giúp bạn khám phá những thế giới đó.",
+      "item1": "Phổ biến tri thức và văn hóa đọc",
+      "item2": "Hỗ trợ phát triển giáo dục và nghiên cứu",
+      "item3": "Kết nối độc giả với những tác phẩm giá trị"
+    },
+    "vision": {
+      "title": "Tầm Nhìn",
+      "description": "Chúng tôi mong muốn trở thành nền tảng sách trực tuyến hàng đầu tại Việt Nam, nơi mọi người đều có thể dễ dàng tìm thấy và sở hữu những cuốn sách yêu thích. Chúng tôi hướng tới việc xây dựng một cộng đồng đọc sách sôi động và phát triển.",
+      "item1": "Trở thành hiệu sách trực tuyến số 1 Việt Nam",
+      "item2": "Mở rộng danh mục sách lên 100.000 đầu sách",
+      "item3": "Phục vụ hơn 1 triệu khách hàng vào năm 2030"
+    },
+    "values": {
+      "title": "Điều làm nên Bookle",
+      "subtitle": "Giá trị cốt lõi",
+      "description": "Những giá trị này đã đồng hành cùng chúng tôi trong suốt hành trình 28 năm qua",
+      "passion": {
+        "title": "Đam mê sách",
+        "description": "Chúng tôi không chỉ bán sách, mà còn nuôi dưỡng tình yêu văn chương và tri thức cho mọi người."
+      },
+      "quality": {
+        "title": "Chất lượng hàng đầu",
+        "description": "Mỗi cuốn sách được chọn lọc kỹ càng, đảm bảo nội dung và chất lượng in ấn tốt nhất."
+      },
+      "trust": {
+        "title": "Uy tín lâu đời",
+        "description": "Hơn 28 năm hoạt động, chúng tôi tự hào là đối tác tin cậy của hàng trăm nghìn độc giả."
+      },
+      "service": {
+        "title": "Phục vụ tận tâm",
+        "description": "Đội ngũ nhân viên chuyên nghiệp, luôn sẵn sàng tư vấn và hỗ trợ khách hàng một cách tốt nhất."
+      },
+      "delivery": {
+        "title": "Giao hàng nhanh",
+        "description": "Dịch vụ giao hàng toàn quốc, đảm bảo sách đến tay bạn nhanh chóng và an toàn."
+      },
+      "price": {
+        "title": "Giá cả hợp lý",
+        "description": "Cam kết mang đến những đầu sách chất lượng với mức giá tốt nhất trên thị trường."
+      }
+    },
+    "timeline": {
+      "title": "Những cột mốc quan trọng",
+      "subtitle": "Hành trình phát triển",
+      "1995": {
+        "title": "Thành lập Bookle",
+        "description": "Khởi đầu với một cửa hàng sách nhỏ tại phố cổ Hà Nội, chuyên về sách văn học và giáo khoa."
+      },
+      "2005": {
+        "title": "Mở rộng hệ thống",
+        "description": "Mở thêm 5 chi nhánh tại các thành phố lớn: Hà Nội, Hồ Chí Minh, Đà Nẵng, Huế và Hải Phòng."
+      },
+      "2015": {
+        "title": "Chuyển đổi số",
+        "description": "Ra mắt website bán sách trực tuyến, đánh dấu bước chuyển mình quan trọng của công ty."
+      },
+      "2020": {
+        "title": "Đạt mốc 500K khách hàng",
+        "description": "Vượt qua cột mốc 500.000 khách hàng thân thiết và trở thành một trong những hiệu sách trực tuyến hàng đầu."
+      },
+      "2023": {
+        "title": "Hiện tại & Tương lai",
+        "description": "Tiếp tục phát triển với hơn 50.000 đầu sách và cam kết mang đến trải nghiệm mua sắm tốt nhất cho độc giả Việt Nam."
+      }
+    },
+    "commitment": {
+      "title": "Cam kết của chúng tôi",
+      "description": "Với hơn 28 năm kinh nghiệm, Bookle cam kết mang đến cho bạn những cuốn sách chất lượng cao, giá cả hợp lý và dịch vụ khách hàng tận tâm. Chúng tôi luôn coi khách hàng là trung tâm và không ngừng cải thiện để phục vụ bạn tốt hơn mỗi ngày.",
+      "original": {
+        "title": "Sách chính hãng",
+        "description": "100% sách chính thức từ nhà xuất bản"
+      },
+      "return": {
+        "title": "Đổi trả dễ dàng",
+        "description": "Chính sách đổi trả linh hoạt trong 7 ngày"
+      },
+      "support": {
+        "title": "Hỗ trợ 24/7",
+        "description": "Đội ngũ tư vấn luôn sẵn sàng hỗ trợ bạn"
+      },
+      "contactUs": "Liên hệ với chúng tôi"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Mua Sách Mới",
+      "subtitle": "Với Giá Tốt Nhất",
+      "shopNow": "Mua ngay"
+    },
+    "featured": {
+      "title": "Sản phẩm nổi bật",
+      "subtitle": "Sách bán chạy"
+    },
+    "new": {
+      "title": "Sản phẩm mới",
+      "subtitle": "Sách mới nhất"
+    }
+  },
+  "errors": {
+    "notFound": {
+      "title": "Trang không tìm thấy",
+      "description": "Xin lỗi, trang bạn đang tìm kiếm không tồn tại.",
+      "goHome": "Về trang chủ"
+    },
+    "generic": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+    "network": "Lỗi kết nối. Vui lòng kiểm tra kết nối mạng của bạn."
+  },
+  "footer": {
+    "contactInfo": {
+      "callUs": "Gọi chúng tôi 24/7",
+      "makeQuote": "Gửi yêu cầu báo giá",
+      "openingHour": "Giờ mở cửa",
+      "location": "Địa chỉ",
+      "openingHours": "Chủ Nhật - Thứ Sáu: 9h - 18h"
+    },
+    "about": {
+      "description": "Bookle là hiệu sách trực tuyến hàng đầu tại Việt Nam, chuyên cung cấp các đầu sách đa dạng từ trong và ngoài nước với chất lượng cao và giá cả hợp lý."
+    },
+    "customerSupport": {
+      "title": "Hỗ trợ khách hàng",
+      "storeList": "Danh sách cửa hàng",
+      "openingHours": "Giờ mở cửa",
+      "contactUs": "Liên hệ chúng tôi",
+      "returnPolicy": "Chính sách đổi trả"
+    },
+    "categories": {
+      "title": "Danh mục",
+      "novel": "Tiểu thuyết",
+      "poetry": "Thơ ca",
+      "political": "Chính trị",
+      "history": "Lịch sử"
+    },
+    "newsletter": {
+      "title": "Bản tin",
+      "description": "Đăng ký nhận bản tin hàng tuần để nhận cập nhật mới nhất.",
+      "placeholder": "Nhập địa chỉ email",
+      "submit": "Gửi"
+    },
+    "copyright": "© Tất cả bản quyền 2024 thuộc về"
+  }
+}
+
