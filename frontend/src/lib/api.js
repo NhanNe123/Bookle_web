@@ -2,8 +2,41 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: '/api',
-  withCredentials: true, // Important for session cookies
+  withCredentials: true,
 });
+
+// JWT admin: chỉ gắn khi gọi API quản trị — không gắn vào GET /auth/me (session khách).
+// Nếu gắn Bearer admin vào /auth/me, server chỉ đọc cookie session → thiếu session → 401.
+function isCustomerAuthMeRequest(config) {
+  const path = String(config.url || '').split('?')[0].replace(/\/$/, '') || '';
+  return path === '/auth/me' || path === 'auth/me';
+}
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('bookle_admin_token');
+  if (token && !isCustomerAuthMeRequest(config)) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Nếu server trả 401 trên trang admin → xóa token, chuyển về login
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (
+      err?.response?.status === 401 &&
+      typeof window !== 'undefined' &&
+      window.location.pathname.startsWith('/admin') &&
+      !window.location.pathname.includes('/admin/login')
+    ) {
+      localStorage.removeItem('bookle_admin_token');
+      localStorage.removeItem('bookle_admin_user');
+      window.location.href = '/admin/login';
+    }
+    return Promise.reject(err);
+  }
+);
 
 // Products API
 export const getProducts = async (params) => {
@@ -13,6 +46,18 @@ export const getProducts = async (params) => {
 
 export const getProductById = async (id) => {
   const response = await api.get(`/products/${id}`);
+  return response.data;
+};
+
+// Get related products based on AI recommendation
+export const getRelatedProducts = async (id, limit = 8) => {
+  const response = await api.get(`/products/${id}/related`, { params: { limit } });
+  return response.data;
+};
+
+// Get available book languages
+export const getBookLanguages = async () => {
+  const response = await api.get('/products/languages');
   return response.data;
 };
 
@@ -119,10 +164,116 @@ export const reviewsAPI = {
 
 // AI Chat API
 export const aiChatAPI = {
-  search: async (query, conversationHistory = []) => {
-    const response = await api.post('/products/ai-search', { 
-      query,
-      conversationHistory 
+  /** @param {string|null|undefined} contextProductId - _id hoặc slug sản phẩm khi mở chat từ trang chi tiết */
+  search: async (query, conversationHistory = [], contextProductId = null) => {
+    const body = { query, conversationHistory };
+    if (contextProductId) {
+      body.contextProductId = String(contextProductId);
+    }
+    const response = await api.post('/products/ai-search', body);
+    return response.data;
+  },
+};
+
+// Admin Products CRUD
+export const adminProductsAPI = {
+  list: async (params = {}) => {
+    const response = await api.get('/products', { params });
+    return response.data;
+  },
+  getById: async (id) => {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  },
+  create: async (payload) => {
+    const response = await api.post('/products', payload);
+    return response.data;
+  },
+  update: async (id, payload) => {
+    const response = await api.put(`/products/${id}`, payload);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await api.delete(`/products/${id}`);
+    return response.data;
+  },
+};
+
+/** Upload ảnh admin → POST /api/upload (Bearer tự gắn qua interceptor) */
+export const adminUploadAPI = {
+  /** @param {File} file */
+  postFile: async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/upload', formData);
+    return response.data;
+  },
+};
+
+// Events API (quản trị / theme động)
+export const eventsAPI = {
+  list: async () => {
+    const response = await api.get('/events');
+    return response.data;
+  },
+  suggest: async (prompt) => {
+    const response = await api.post('/events/suggest', { prompt });
+    return response.data;
+  },
+  create: async (payload) => {
+    const response = await api.post('/events', payload);
+    return response.data;
+  },
+  update: async (id, payload) => {
+    const response = await api.put(`/events/${id}`, payload);
+    return response.data;
+  },
+  deactivate: async (id) => {
+    const response = await api.patch(`/events/${id}/deactivate`);
+    return response.data;
+  },
+  remove: async (id) => {
+    const rid = id != null && typeof id === 'object' && typeof id.toString === 'function'
+      ? id.toString()
+      : String(id ?? '');
+    if (!rid || rid === 'undefined') {
+      throw new Error('Thiếu ID sự kiện');
+    }
+    const response = await api.post(`/events/${encodeURIComponent(rid)}/delete`);
+    return response.data;
+  },
+};
+
+// Orders API
+export const ordersAPI = {
+  // Create new order
+  createOrder: async (orderData) => {
+    const response = await api.post('/orders', orderData);
+    return response.data;
+  },
+  
+  // Get user's orders
+  getOrders: async (params = {}) => {
+    const response = await api.get('/orders', { params });
+    return response.data;
+  },
+  
+  // Get order details
+  getOrderById: async (id) => {
+    const response = await api.get(`/orders/${id}`);
+    return response.data;
+  },
+  
+  // Cancel order
+  cancelOrder: async (id, reason) => {
+    const response = await api.put(`/orders/${id}/cancel`, { reason });
+    return response.data;
+  },
+  
+  // Track order by order number
+  trackOrder: async (orderNumber, email) => {
+    const response = await api.get(`/orders/track/${orderNumber}`, { 
+      params: { email } 
     });
     return response.data;
   }

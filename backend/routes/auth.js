@@ -1,11 +1,15 @@
 // routes/auth.js
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import passport from '../config/passport.js';
 import User from '../models/User.js';
 import emailService from '../services/emailService.js';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+
+const JWT_SECRET = process.env.JWT_SECRET || process.env.SESSION_SECRET || 'bookle-jwt-fallback-secret';
+const JWT_EXPIRES_IN = '7d';
 
 const AVATAR_UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads', 'avatars');
 
@@ -612,6 +616,171 @@ router.get('/facebook/callback',
     res.redirect('/?login=success');
   }
 );
+
+// ══════════════════════════════════════
+// ADMIN: JWT Login + Middleware
+// ══════════════════════════════════════
+
+/** Tải user từ session cookie HOẶC JWT Bearer token */
+const loadUserFromSession = async (req, _res, next) => {
+  try {
+    if (req.user) return next();
+
+    // 1. JWT Bearer
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+      try {
+        const decoded = jwt.verify(authHeader.slice(7), JWT_SECRET);
+        const u = await User.findById(decoded.id).select('-password');
+        if (u) { req.user = u; return next(); }
+      } catch { /* token invalid — fall through to session */ }
+    }
+
+    // 2. Session cookie
+    const sid = req.session?.userId;
+    if (!sid) return next();
+    const u = await User.findById(sid).select('-password');
+    if (u) req.user = u;
+    next();
+  } catch (e) { next(e); }
+};
+
+const requireAdminRole = (req, res, next) => {
+  if (!req.user) return res.status(401).json({ success: false, error: 'Vui lòng đăng nhập' });
+  if (req.user.role !== 'admin') return res.status(403).json({ success: false, error: 'Cần quyền admin' });
+  next();
+};
+
+// POST /api/auth/admin/login — JWT login cho trang Admin React
+router.post('/admin/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, error: 'Vui lòng nhập email và mật khẩu' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Email hoặc mật khẩu không đúng' });
+    }
+
+    if (!user.isActive) {
+      return res.status(403).json({ success: false, error: 'Tài khoản đã bị khóa' });
+    }
+
+    const valid = await user.comparePassword(password);
+    if (!valid) {
+      return res.status(401).json({ success: false, error: 'Email hoặc mật khẩu không đúng' });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({ success: false, error: 'Tài khoản không có quyền quản trị' });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.json({
+      success: true,
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar || '',
+      },
+    });
+  } catch (e) {
+    console.error('POST /api/auth/admin/login error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi đăng nhập' });
+  }
+});
+
+// GET /api/auth/admin/me — Xác thực token hiện tại
+router.get('/admin/me', loadUserFromSession, requireAdminRole, (req, res) => {
+  res.json({
+    success: true,
+    user: {
+      _id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
+      avatar: req.user.avatar || '',
+    },
+  });
+});
+
+// GET /api/auth/admin/users
+router.get('/admin/users', loadUserFromSession, requireAdminRole, async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const skip = (page - 1) * limit;
+    const filter = {};
+    if (req.query.role) filter.role = req.query.role;
+    if (req.query.q) {
+      const re = new RegExp(req.query.q, 'i');
+      filter.$or = [{ name: re }, { email: re }, { phone: re }];
+    }
+
+    const [users, total] = await Promise.all([
+      User.find(filter)
+        .select('-password -emailVerificationToken -passwordResetToken')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      User.countDocuments(filter),
+    ]);
+
+    res.json({ success: true, users, total, page, pages: Math.ceil(total / limit) });
+  } catch (e) {
+    console.error('GET /api/auth/admin/users error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi tải danh sách' });
+  }
+});
+
+// PATCH /api/auth/admin/users/:id/toggle — Khóa / Mở khóa
+router.patch('/admin/users/:id/toggle', loadUserFromSession, requireAdminRole, async (req, res) => {
+  try {
+    const doc = await User.findById(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy' });
+    if (doc._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({ success: false, error: 'Không thể khóa chính mình' });
+    }
+    doc.isActive = !doc.isActive;
+    await doc.save();
+    res.json({ success: true, message: doc.isActive ? 'Đã mở khóa' : 'Đã khóa', user: doc.toPublicProfile() });
+  } catch (e) {
+    console.error('PATCH /api/auth/admin/users/:id/toggle error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi cập nhật' });
+  }
+});
+
+// PATCH /api/auth/admin/users/:id/role — Đổi role
+router.patch('/admin/users/:id/role', loadUserFromSession, requireAdminRole, async (req, res) => {
+  try {
+    const { role } = req.body;
+    if (!['user', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, error: 'Role không hợp lệ' });
+    }
+    const doc = await User.findById(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy' });
+    doc.role = role;
+    await doc.save();
+    res.json({ success: true, message: `Đã chuyển sang ${role}`, user: doc.toPublicProfile() });
+  } catch (e) {
+    console.error('PATCH /api/auth/admin/users/:id/role error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi cập nhật' });
+  }
+});
 
 export default router;
 

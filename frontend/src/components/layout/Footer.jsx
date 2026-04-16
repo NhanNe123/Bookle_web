@@ -54,7 +54,7 @@ const Footer = () => {
             </div>
             <div className="content">
               <p>{t('footer.contactInfo.location')}</p>
-              <h3>123 Đường ABC, Quận XYZ, Hà Nội</h3>
+              <h3>Khu II, Đ. 3/2, Ninh Kiều, Cần Thơ</h3>
             </div>
           </div>
         </div>
@@ -96,31 +96,31 @@ const Footer = () => {
             <div className="col-xl-3 col-lg-4 col-md-6 ps-lg-5 wow fadeInUp" data-wow-delay=".4s">
               <div className="single-footer-widget">
                 <div className="widget-head">
-                  <h3>{t('footer.customerSupport.title')}</h3>
+                  <h3>Danh mục</h3>
                 </div>
                 <ul className="list-area">
                   <li>
+                    <Link to="/about">
+                      <i className="fa-solid fa-chevrons-right"></i>
+                      Về chúng tôi
+                    </Link>
+                  </li>
+                  <li>
                     <Link to="/shop">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.customerSupport.storeList')}
+                      Cửa hàng sách
                     </Link>
                   </li>
                   <li>
-                    <Link to="/contact">
+                    <Link to="/authors">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.customerSupport.openingHours')}
+                      Tác giả
                     </Link>
                   </li>
                   <li>
-                    <Link to="/contact">
+                    <Link to="/news">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.customerSupport.contactUs')}
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/contact">
-                      <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.customerSupport.returnPolicy')}
+                      Tin tức
                     </Link>
                   </li>
                 </ul>
@@ -129,31 +129,31 @@ const Footer = () => {
             <div className="col-xl-3 col-lg-4 col-md-6 ps-lg-5 wow fadeInUp" data-wow-delay=".6s">
               <div className="single-footer-widget">
                 <div className="widget-head">
-                  <h3>{t('footer.categories.title')}</h3>
+                  <h3>Hỗ trợ</h3>
                 </div>
                 <ul className="list-area">
                   <li>
-                    <Link to="/shop">
+                    <Link to="/faq">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.categories.novel')}
+                      Câu hỏi thường gặp
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop">
+                    <Link to="/contact">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.categories.poetry')}
+                      Chính sách đổi trả
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop">
+                    <Link to="/contact">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.categories.political')}
+                      Bảo mật thông tin
                     </Link>
                   </li>
                   <li>
-                    <Link to="/shop">
+                    <Link to="/contact">
                       <i className="fa-solid fa-chevrons-right"></i>
-                      {t('footer.categories.history')}
+                      Liên hệ hỗ trợ
                     </Link>
                   </li>
                 </ul>
@@ -162,23 +162,31 @@ const Footer = () => {
             <div className="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".8s">
               <div className="single-footer-widget">
                 <div className="widget-head">
-                  <h3>{t('footer.newsletter.title')}</h3>
+                  <h3>Liên hệ</h3>
                 </div>
                 <div className="footer-content">
-                  <p>{t('footer.newsletter.description')}</p>
-                  <form onSubmit={handleNewsletterSubmit} className="footer-input">
-                    <input 
-                      type="email" 
-                      id="email2" 
-                      placeholder={t('footer.newsletter.placeholder')}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                    <button className="newsletter-btn" type="submit">
-                      <i className="fa-regular fa-paper-plane"></i>
-                    </button>
-                  </form>
+                  <p style={{ marginBottom: 12 }}>
+                    <i className="fa-solid fa-location-dot" style={{ marginRight: 8 }}></i>
+                    Khu II, Đ. 3/2, Xuân Khánh,<br/>Ninh Kiều, Cần Thơ
+                  </p>
+                  <p style={{ marginBottom: 16 }}>
+                    <i className="fa-solid fa-envelope" style={{ marginRight: 8 }}></i>
+                    bookle.cantho@gmail.com
+                  </p>
+                  <div className="social-icon d-flex align-items-center">
+                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" title="Facebook">
+                      <i className="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" title="Instagram">
+                      <i className="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" title="TikTok">
+                      <i className="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" title="YouTube">
+                      <i className="fab fa-youtube"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

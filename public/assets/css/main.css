@@ -1,20 +1,67 @@
 
 /*CSS Table Of Content Ends Here*/
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Moon+Dance&amp;display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Moon+Dance&family=Playfair+Display:wght@400;600;700;900&display=swap");
 :root {
-  --body: #fff;
+  /* Bookle — theme động (ThemeContext / main.js cập nhật qua document.documentElement) */
+  --primary-color: #036280;
+  --secondary-color: #ff6500;
+  --bg-color: #ffffff;
+  --text-color: #4f536c;
+  /* Lớp nền / trang trí banner (có thể đổi thành url(...) hoặc none) */
+  --banner-url: none;
+
+  /* Đồng bộ biến template cũ — luôn dẫn xuất từ theme động */
+  --body: var(--bg-color);
   --black: #000;
   --white: #fff;
-  --theme: #036280;
-  --theme2: #FF6500;
-  --header: #012E4A;
-  --text: #4F536C;
-  --border: #D4DCFF;
-  --border-2: #D4DCED;
-  --border-3: #D0E1E7;
-  --bg: #D0E1E7;
-  --bg2: #F5F5F5;
+  --theme: var(--primary-color);
+  --theme2: var(--secondary-color);
+  --header: #012e4a;
+  --text: var(--text-color);
+  --border: #d4dcff;
+  --border-2: #d4dced;
+  --border-3: #d0e1e7;
+  --bg: #d0e1e7;
+  --bg2: #f5f5f5;
   --box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.06);
+  /* Tiện ích giao diện (Header / liên kết) */
+  --link-hover: #56ccf2;
+  --danger-color: #dc3545;
+  --surface-hover: #f8f9fa;
+  --dropdown-text: #333333;
+
+  /* ── Dynamic Theme v3 — defaults (overridden by themeEngine.js) ── */
+
+  /* Adaptive colors */
+  --bg-body: #ffffff;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-secondary: #64748b;
+  --border-color: #e2e8f0;
+
+  /* Commercial (stable) */
+  --price-color: #e67e22;
+  --status-success: #16a34a;
+
+  /* Derived from primary */
+  --primary-hover: #025068;
+  --text-on-primary: #ffffff;
+  --text-on-secondary: #ffffff;
+  --primary-contrast: #ffffff;
+  --secondary-contrast: #ffffff;
+  --shadow-color: rgba(3, 98, 128, 0.1);
+
+  /* Card / Component */
+  --card-shadow: 0 8px 28px var(--shadow-color);
+  --card-bg: var(--bg-card);
+  --card-text: var(--text-main);
+  --card-radius: 12px;
+
+  /* Typography */
+  --theme-font: 'Inter', system-ui, sans-serif;
+
+  /* Hero */
+  --hero-overlay: linear-gradient(to right, rgba(3,98,128,0.8), rgba(3,98,128,0.2), transparent);
 }
 
 .theme-btn {
@@ -119,7 +166,7 @@ body {
   font-weight: normal;
   line-height: 28px;
   color: var(--text);
-  background-color: var(--white);
+  background-color: var(--bg-color);
   padding: 0;
   margin: 0;
   overflow-x: hidden;
@@ -4955,6 +5002,9 @@ span {
 }
 .shop-box-items .book-thumb img {
   max-width: 100%;
+  max-height: 225px;
+  height: auto;
+  width: auto;
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;
@@ -5586,6 +5636,9 @@ span {
 }
 .shop-box-items .book-thumb img {
   max-width: 100%;
+  max-height: 225px;
+  height: auto;
+  width: auto;
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;
@@ -6811,6 +6864,13 @@ span {
     padding: 30px 15px;
   }
 }
+.shop-details-wrapper .shop-details-image .shop-details-thumb img {
+  max-width: 100%;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
 .shop-details-wrapper .shop-details-image .nav {
   display: flex;
   align-items: center;
@@ -6823,6 +6883,19 @@ span {
   background: #F8F8F8;
   text-align: center;
   margin: 0 auto;
+  padding: 10px;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shop-details-wrapper .shop-details-image .nav .nav-item .nav-link img {
+  max-width: 100%;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 .shop-details-wrapper .shop-details-image .nav .nav-item .nav-link.active {
   border: 1px solid var(--theme);

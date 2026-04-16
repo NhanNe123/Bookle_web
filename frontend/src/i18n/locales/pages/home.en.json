@@ -1,17 +1,78 @@
 {
   "home": {
     "hero": {
-      "title": "Get Your New Book",
-      "subtitle": "With The Best Price",
-      "shopNow": "Shop Now"
+      "badgeLabel": "Bookle week",
+      "badgeValue": "Up to 30% off",
+      "title": "Featured book bundles",
+      "titleHighlight": "straight from the shelves",
+      "description": "A bookstore hero that puts books first—curated stacks, fast delivery, and clear pricing. Calm browsing, not loud marketing.",
+      "cta": "Shop the promo picks",
+      "ctaSecondary": "Browse all books",
+      "shelfAria": "Illustration of wooden shelves with book spines",
+      "campaigns": {
+        "ariaLabel": "Featured campaigns this week",
+        "mangaWeek": {
+          "title": "Manga Week",
+          "desc": "Fresh series picks with daily markdowns"
+        },
+        "comboFinance": {
+          "title": "Finance Bundle",
+          "desc": "Save more when buying investing sets"
+        },
+        "textbookSeason": {
+          "title": "Textbook Season",
+          "desc": "Student-friendly deals for new semester"
+        }
+      }
     },
     "featured": {
       "title": "Featured Products",
       "subtitle": "Bestsellers"
     },
     "new": {
-      "title": "New Products",
-      "subtitle": "Latest Books"
+      "title": "Latest Books",
+      "subtitle": "Fresh arrivals you can explore now"
+    },
+    "featuredCategories": {
+      "title": "Featured Categories",
+      "subtitle": "Start with curated shelves based on reading interests",
+      "manga": {
+        "title": "Manga & Comics",
+        "subtitle": "Visual storytelling for relaxing moments"
+      },
+      "investing": {
+        "title": "Investing & Finance",
+        "subtitle": "Build a stronger long-term money mindset"
+      },
+      "textbook": {
+        "title": "University Textbooks",
+        "subtitle": "Study-ready picks for coursework and exams"
+      },
+      "ai": {
+        "title": "AI & Technology",
+        "subtitle": "Keep up with modern tech trends"
+      }
+    },
+    "shelves": {
+      "viewMore": "View more",
+      "manga": {
+        "title": "Manga & Comics Shelf",
+        "subtitle": "Popular picks readers are browsing"
+      },
+      "investing": {
+        "title": "Investing & Finance Shelf",
+        "subtitle": "Recommended for practical money growth"
+      },
+      "textbook": {
+        "title": "University Textbook Shelf",
+        "subtitle": "Focused selections for study and reference"
+      }
+    },
+    "recentlyViewed": {
+      "title": "Recently viewed",
+      "subtitle": "One horizontal row — 8 recent titles; View more loads up to 16 on the home page",
+      "viewMore": "View more",
+      "moreOnShop": "More in your history — open the shop to keep browsing"
     }
   }
 }

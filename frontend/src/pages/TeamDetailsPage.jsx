@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getAuthorById, getAuthorBySlug, getAuthorProducts } from '../lib/api';
 import ProductCard from '../components/product/ProductCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const TeamDetailsPage = () => {
   const { id } = useParams();
+  const { i18n } = useTranslation();
   const [author, setAuthor] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const isVietnamese = i18n.language === 'vi';
 
   useEffect(() => {
     const fetchAuthorData = async () => {
@@ -53,7 +57,7 @@ const TeamDetailsPage = () => {
         }
       } catch (err) {
         console.error('Error fetching author:', err);
-        setError('Không thể tải thông tin tác giả');
+        setError(isVietnamese ? 'Không thể tải thông tin tác giả' : 'Failed to load author information');
         setAuthor(null);
       } finally {
         setLoading(false);
@@ -63,12 +67,12 @@ const TeamDetailsPage = () => {
     if (id) {
       fetchAuthorData();
     }
-  }, [id]);
+  }, [id, isVietnamese]);
 
   if (loading) {
     return (
       <div className="text-center py-5">
-        <LoadingSpinner fullScreen={true} size="large" variant="spinner" text="Đang tải..." />
+        <LoadingSpinner fullScreen={true} size="large" variant="spinner" text={isVietnamese ? 'Đang tải...' : 'Loading...'} />
       </div>
     );
   }
@@ -77,11 +81,11 @@ const TeamDetailsPage = () => {
     return (
       <div className="container py-5">
         <div className="alert alert-danger text-center" role="alert">
-          {error || 'Không tìm thấy tác giả'}
+          {error || (isVietnamese ? 'Không tìm thấy tác giả' : 'Author not found')}
         </div>
         <div className="text-center mt-3">
-          <Link to="/team" className="theme-btn">
-            Quay lại danh sách tác giả
+          <Link to="/authors" className="theme-btn">
+            {isVietnamese ? 'Quay lại danh sách tác giả' : 'Back to authors'}
           </Link>
         </div>
       </div>
@@ -104,13 +108,13 @@ const TeamDetailsPage = () => {
             <div className="page-header">
               <ul className="breadcrumb-items wow fadeInUp" data-wow-delay=".3s">
                 <li>
-                  <Link to="/">Home</Link>
+                  <Link to="/">{isVietnamese ? 'Trang chủ' : 'Home'}</Link>
                 </li>
                 <li>
                   <i className="fa-solid fa-chevron-right"></i>
                 </li>
                 <li>
-                  <Link to="/team">Author</Link>
+                  <Link to="/authors">{isVietnamese ? 'Tác giả' : 'Authors'}</Link>
                 </li>
                 <li>
                   <i className="fa-solid fa-chevron-right"></i>
@@ -181,12 +185,12 @@ const TeamDetailsPage = () => {
             <div className="details-counter-area">
               <div className="counter-items">
                 <h2>{products.length}</h2>
-                <p>Published Books</p>
+                <p>{isVietnamese ? 'Tác phẩm' : 'Published Books'}</p>
               </div>
               {author.awards && author.awards.length > 0 && (
                 <div className="counter-items">
                   <h2>{author.awards.length}</h2>
-                  <p>Awards</p>
+                  <p>{isVietnamese ? 'Giải thưởng' : 'Awards'}</p>
                 </div>
               )}
             </div>
@@ -198,10 +202,10 @@ const TeamDetailsPage = () => {
               <div className="col-lg-12">
                 {author.bio && (
                   <div className="testimonial-card-items mb-4">
-                    <h3 className="mb-3">About Author</h3>
+                    <h3 className="mb-3">{isVietnamese ? 'Giới thiệu tác giả' : 'About Author'}</h3>
                     <div className="bio-content">
                       {author.bio.split('\n').map((paragraph, index) => (
-                        <p key={index} style={{ marginBottom: '15px' }}>{paragraph}</p>
+                        <p key={index} style={{ marginBottom: '15px', lineHeight: '1.8' }}>{paragraph}</p>
                       ))}
                     </div>
                   </div>
@@ -209,7 +213,7 @@ const TeamDetailsPage = () => {
 
                 {author.awards && author.awards.length > 0 && (
                   <div className="testimonial-card-items">
-                    <h3 className="mb-3">Awards & Achievements</h3>
+                    <h3 className="mb-3">{isVietnamese ? 'Giải thưởng & Thành tựu' : 'Awards & Achievements'}</h3>
                     <ul style={{ listStyle: 'none', padding: 0 }}>
                       {author.awards.map((award, index) => (
                         <li key={index} style={{ padding: '10px 0', borderBottom: index < author.awards.length - 1 ? '1px solid #E5E5E5' : 'none' }}>
@@ -229,8 +233,8 @@ const TeamDetailsPage = () => {
             <div className="row mt-5">
               <div className="col-12">
                 <div className="section-title text-center mb-5">
-                  <h2>Published Books</h2>
-                  <p>Books written by {author.name}</p>
+                  <h2>{isVietnamese ? 'Tác Phẩm' : 'Published Books'}</h2>
+                  <p>{isVietnamese ? `Các sách của ${author.name}` : `Books written by ${author.name}`}</p>
                 </div>
                 <div className="row g-4">
                   {products.map((product) => (
@@ -248,8 +252,8 @@ const TeamDetailsPage = () => {
               <div className="col-12">
                 <div className="testimonial-card-items text-center">
                   <i className="fa-solid fa-book-open" style={{ fontSize: '64px', color: '#ccc', marginBottom: '20px' }}></i>
-                  <h4>No Books Available</h4>
-                  <p className="text-muted">This author hasn't published any books yet.</p>
+                  <h4>{isVietnamese ? 'Chưa có sách' : 'No Books Available'}</h4>
+                  <p className="text-muted">{isVietnamese ? 'Tác giả này chưa có sách trong hệ thống.' : "This author hasn't published any books yet."}</p>
                 </div>
               </div>
             </div>

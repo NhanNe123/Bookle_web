@@ -11,7 +11,7 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function generateAdminHash() {
   try {
-    console.log('🔐 Tạo hash mật khẩu cho AdminJS\n');
+    console.log('🔐 Tạo hash mật khẩu cho tài khoản quản trị\n');
     
     const email = await question('Nhập email admin: ');
     const password = await question('Nhập mật khẩu admin: ');
@@ -41,6 +41,8 @@ async function generateAdminHash() {
 }
 
 generateAdminHash();
+
+
 
 
 

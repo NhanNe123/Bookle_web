@@ -28,6 +28,8 @@ import authVi from './locales/pages/auth.json';
 import authEn from './locales/pages/auth.en.json';
 import errorsVi from './locales/pages/errors.json';
 import errorsEn from './locales/pages/errors.en.json';
+import checkoutVi from './locales/pages/checkout.json';
+import checkoutEn from './locales/pages/checkout.en.json';
 
 // Hàm merge deep để merge nested objects đúng cách
 const deepMerge = (target, source) => {
@@ -56,13 +58,13 @@ const mergeTranslations = (...translations) => {
 };
 
 const viTranslations = mergeTranslations(
-  commonVi, headerVi, footerVi, homeVi, shopVi, aboutVi, teamVi, 
-  contactVi, faqVi, newsVi, blogVi, authVi, errorsVi
+  commonVi, headerVi, footerVi, homeVi, shopVi, aboutVi, teamVi, 
+  contactVi, faqVi, newsVi, blogVi, authVi, errorsVi, checkoutVi
 );
 
 const enTranslations = mergeTranslations(
-  commonEn, headerEn, footerEn, homeEn, shopEn, aboutEn, teamEn, 
-  contactEn, faqEn, newsEn, blogEn, authEn, errorsEn
+  commonEn, headerEn, footerEn, homeEn, shopEn, aboutEn, teamEn, 
+  contactEn, faqEn, newsEn, blogEn, authEn, errorsEn, checkoutEn
 );
 
 // Lấy ngôn ngữ đã lưu, NẾU KHÔNG CÓ thì mặc định là 'vi'

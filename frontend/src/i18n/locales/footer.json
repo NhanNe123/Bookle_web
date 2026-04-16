@@ -12,17 +12,17 @@
     },
     "customerSupport": {
       "title": "Hỗ trợ khách hàng",
-      "storeList": "Danh sách cửa hàng",
-      "openingHours": "Giờ mở cửa",
-      "contactUs": "Liên hệ chúng tôi",
+      "storeList": "Hướng dẫn mua hàng",
+      "openingHours": "Câu hỏi thường gặp (FAQ)",
+      "contactUs": "Liên hệ & hỗ trợ",
       "returnPolicy": "Chính sách đổi trả"
     },
     "categories": {
-      "title": "Danh mục",
-      "novel": "Tiểu thuyết",
-      "poetry": "Thơ ca",
-      "political": "Chính trị",
-      "history": "Lịch sử"
+      "title": "Thông tin & chính sách",
+      "novel": "Giới thiệu Bookle",
+      "poetry": "Chính sách bảo mật",
+      "political": "Điều khoản sử dụng",
+      "history": "Tin tức & Blog"
     },
     "newsletter": {
       "title": "Bản tin",

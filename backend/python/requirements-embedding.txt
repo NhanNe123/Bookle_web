@@ -1,0 +1,6 @@
+# Embedding service (Qwen / gte-Qwen2) - chạy trong môi trường Python
+# Cài đặt: pip install -r requirements-embedding.txt
+
+sentence-transformers>=2.2.0
+flask>=2.0.0
+# torch thường đã được cài kèm sentence-transformers

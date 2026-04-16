@@ -1,17 +1,78 @@
 {
   "home": {
     "hero": {
-      "title": "Mua Sách Mới",
-      "subtitle": "Với Giá Tốt Nhất",
-      "shopNow": "Mua ngay"
+      "badgeLabel": "Tuần lễ Bookle",
+      "badgeValue": "Giảm đến 30%",
+      "title": "Ưu đãi bộ sách đang hot",
+      "titleHighlight": "trên kệ nhà sách",
+      "description": "Tập trung vào sách — gợi ý theo từng kệ, giao nhanh và giá minh bạch. Không phô trương, chỉ những cuốn đáng đọc.",
+      "cta": "Xem bộ sách ưu đãi",
+      "ctaSecondary": "Tất cả sách",
+      "shelfAria": "Minh họa kệ sách gỗ với các cuốn sách",
+      "campaigns": {
+        "ariaLabel": "Các chiến dịch nổi bật trong tuần",
+        "mangaWeek": {
+          "title": "Tuần lễ Manga",
+          "desc": "Top bộ mới giảm sâu, cập nhật hàng ngày"
+        },
+        "comboFinance": {
+          "title": "Combo Đầu tư",
+          "desc": "Mua trọn bộ tài chính tiết kiệm hơn"
+        },
+        "textbookSeason": {
+          "title": "Mùa Giáo trình",
+          "desc": "Ưu đãi cho sinh viên đầu học kỳ"
+        }
+      }
     },
     "featured": {
       "title": "Sản phẩm nổi bật",
       "subtitle": "Sách bán chạy"
     },
     "new": {
-      "title": "Sản phẩm mới",
-      "subtitle": "Sách mới nhất"
+      "title": "Sách mới nhất",
+      "subtitle": "Các đầu sách vừa cập nhật"
+    },
+    "featuredCategories": {
+      "title": "Danh mục nổi bật",
+      "subtitle": "Bắt đầu từ những kệ sách phù hợp gu đọc của bạn",
+      "manga": {
+        "title": "Truyện tranh - Manga",
+        "subtitle": "Giải trí nhẹ nhàng, hình ảnh cuốn hút"
+      },
+      "investing": {
+        "title": "Đầu tư - Tài chính",
+        "subtitle": "Xây nền tư duy tiền bạc dài hạn"
+      },
+      "textbook": {
+        "title": "Giáo trình Đại học",
+        "subtitle": "Ôn tập nhanh, học chắc kiến thức"
+      },
+      "ai": {
+        "title": "AI - Công nghệ",
+        "subtitle": "Bắt kịp xu hướng công nghệ mới"
+      }
+    },
+    "shelves": {
+      "viewMore": "Xem thêm",
+      "manga": {
+        "title": "Kệ Truyện Tranh - Manga",
+        "subtitle": "Những bộ đang được tìm đọc nhiều"
+      },
+      "investing": {
+        "title": "Kệ Đầu tư - Tài chính",
+        "subtitle": "Gợi ý cho người muốn quản trị tài chính tốt hơn"
+      },
+      "textbook": {
+        "title": "Kệ Giáo trình Đại học",
+        "subtitle": "Tập trung cho học tập và nghiên cứu"
+      }
+    },
+    "recentlyViewed": {
+      "title": "Sách bạn vừa xem",
+      "subtitle": "Cuộn ngang trên một hàng — 8 cuốn gần nhất; Xem thêm để tải tối đa 16 cuốn trên trang chủ",
+      "viewMore": "Xem thêm",
+      "moreOnShop": "Còn sách trong lịch sử — vào cửa hàng để tiếp tục"
     }
   }
 }

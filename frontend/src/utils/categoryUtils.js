@@ -1,3 +1,39 @@
+/** Placeholder trung tính (tỷ lệ 2:3), không dùng ảnh chồng sách / vuông generic */
+export const PRODUCT_IMAGE_FALLBACK = '/assets/img/no-book-cover.svg';
+
+/**
+ * Encode image URL if it contains special characters (Vietnamese)
+ * @param {string} imageUrl - The image URL path
+ * @returns {string} - Properly encoded URL
+ */
+export const encodeImageUrl = (imageUrl) => {
+  if (!imageUrl) return PRODUCT_IMAGE_FALLBACK;
+  
+  // Only encode URLs from /uploads/ directory
+  if (imageUrl.startsWith('/uploads/')) {
+    // Split the path and encode only the filename part
+    const parts = imageUrl.split('/');
+    // Encode each part after /uploads/products/
+    return parts.map((part, i) => i > 2 ? encodeURIComponent(part) : part).join('/');
+  }
+  
+  return imageUrl;
+};
+
+/**
+ * Get properly encoded product image URL
+ * @param {Array<string>} images - Array of image URLs
+ * @param {string} coverImage - Cover image URL fallback
+ * @param {string} fallback - Fallback image URL
+ * @returns {string} - Encoded image URL
+ */
+export const getProductImage = (images, coverImage = '', fallback = PRODUCT_IMAGE_FALLBACK) => {
+  const rawFromList = Array.isArray(images) ? images.find((x) => typeof x === 'string' && x.trim()) : '';
+  const rawFromCover = typeof coverImage === 'string' ? coverImage.trim() : '';
+  const rawImage = rawFromList || rawFromCover || fallback;
+  return encodeImageUrl(rawImage);
+};
+
 // Category mapping: slug -> display name with proper Vietnamese diacritics
 export const CATEGORY_MAP = {
   'tieu-thuyet': 'Tiểu Thuyết',

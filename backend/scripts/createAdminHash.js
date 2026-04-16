@@ -10,7 +10,7 @@ bcrypt.hash(password, saltRounds)
     console.log('─'.repeat(70));
     console.log(`ADMIN_PASSWORD_HASH=${hash}`);
     console.log('─'.repeat(70));
-    console.log('\n📝 Thông tin đăng nhập AdminJS:');
+    console.log('\n📝 Thông tin đăng nhập trang quản trị:');
     console.log(`   Email: admin@bookle.com`);
     console.log(`   Password: admin123`);
     console.log('\n⚠️  Hãy thêm dòng ADMIN_PASSWORD_HASH vào file .env\n');
@@ -19,6 +19,8 @@ bcrypt.hash(password, saltRounds)
     console.error('❌ Lỗi:', err);
     process.exit(1);
   });
+
+
 
 
 

@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
 import { useAuth } from '../../hooks/useAuth';
+import { getProducts } from '../../lib/api';
+import { getProductImage } from '../../utils/categoryUtils';
 import AIChatAssistant from '../common/AIChatAssistant';
 
 const Header = ({ onToggleSidebar, onShowLogin }) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const { cart, getCartCount } = useCart();
   const { wishlist, getWishlistCount } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
@@ -15,7 +18,70 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
   const wishlistCount = getWishlistCount();
   const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  /** Khi mở chat từ trang chi tiết sách — gửi kèm API để server nạp mô tả đầy đủ */
+  const [aiPageBookContext, setAiPageBookContext] = useState(null);
   const languageDropdownRef = useRef(null);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [activeSearchSource, setActiveSearchSource] = useState(null); // 'sticky' | 'main'
+  const searchStickyRef = useRef(null);
+  const searchMainRef = useRef(null);
+  const searchRef = useRef(null); // backward compat
+  const searchTimerRef = useRef(null);
+
+  const doSearch = useCallback(async (q) => {
+    if (!q || q.trim().length < 2) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+    setSearchLoading(true);
+    try {
+      const data = await getProducts({ q: q.trim(), limit: 5 });
+      setSearchResults(data.items || []);
+      setShowSearchResults(true);
+    } catch {
+      setSearchResults([]);
+    } finally {
+      setSearchLoading(false);
+    }
+  }, []);
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => doSearch(val), 350);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      setShowSearchResults(false);
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleResultClick = () => {
+    setShowSearchResults(false);
+    setSearchQuery('');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      const inSticky = searchStickyRef.current?.contains(e.target);
+      const inMain = searchMainRef.current?.contains(e.target);
+      if (!inSticky && !inMain) {
+        setShowSearchResults(false);
+        setActiveSearchSource(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
@@ -40,6 +106,85 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
     };
   }, [showLanguageDropdown]);
 
+  useEffect(() => {
+    const onOpenFromProduct = (e) => {
+      const d = e.detail || {};
+      setAiPageBookContext(
+        d.contextProductId && d.productName
+          ? { id: d.contextProductId, name: d.productName }
+          : null
+      );
+      setShowAIChat(true);
+    };
+    window.addEventListener('bookle:open-ai-chat', onOpenFromProduct);
+    return () => window.removeEventListener('bookle:open-ai-chat', onOpenFromProduct);
+  }, []);
+
+  const renderSearchBox = (source) => {
+    const ref = source === 'sticky' ? searchStickyRef : searchMainRef;
+    const showDropdown = showSearchResults && activeSearchSource === source;
+
+    return (
+      <div className="col-3 col-lg-3 d-none d-lg-block">
+        <div className="header-search-box" ref={ref}>
+          <form onSubmit={handleSearchSubmit} className="header-search-form">
+            <input
+              type="text"
+              placeholder={t('header.search.placeholder', 'Tìm sách...')}
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onFocus={() => {
+                setActiveSearchSource(source);
+                if (searchResults.length > 0) setShowSearchResults(true);
+              }}
+              className="header-search-input"
+            />
+            <button type="submit" className="header-search-btn">
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
+          </form>
+          {showDropdown && (
+            <div className="header-search-dropdown">
+              {searchLoading && <div className="header-search-loading">Đang tìm...</div>}
+              {!searchLoading && searchResults.length === 0 && searchQuery.trim().length >= 2 && (
+                <div className="header-search-empty">Không tìm thấy sách nào</div>
+              )}
+              {searchResults.map((item) => (
+                <Link
+                  key={item._id}
+                  to={`/shop-details/${item.slug || item._id}`}
+                  className="header-search-item"
+                  onClick={handleResultClick}
+                >
+                  <img
+                    src={getProductImage(item.images, item.coverImage)}
+                    alt={item.name}
+                    className="header-search-item-img"
+                  />
+                  <div className="header-search-item-info">
+                    <div className="header-search-item-name">{item.name}</div>
+                    {item.author && <div className="header-search-item-author">{item.author}</div>}
+                    <div className="header-search-item-price">
+                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+              {searchResults.length > 0 && (
+                <Link
+                  to={`/shop?search=${encodeURIComponent(searchQuery.trim())}`}
+                  className="header-search-viewall"
+                  onClick={handleResultClick}
+                >
+                  Xem tất cả kết quả <i className="fa-solid fa-arrow-right"></i>
+                </Link>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -63,22 +208,25 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
             </ul>
             <ul className="list">
               <li>
-                <i className="fa-solid fa-robot" style={{ color: '#fff' }}></i>
+                <i className="fa-solid fa-robot" style={{ color: 'var(--white)' }}></i>
                 <button 
                   type="button"
-                  onClick={() => setShowAIChat(true)}
+                  onClick={() => {
+                    setAiPageBookContext(null);
+                    setShowAIChat(true);
+                  }}
                   className="ai-contact-btn"
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#fff',
+                    color: 'var(--white)',
                     cursor: 'pointer',
                     padding: 0,
                     font: 'inherit',
                     transition: 'color 0.3s ease'
                   }}
-                  onMouseEnter={(e) => e.target.style.color = '#56CCF2'}
-                  onMouseLeave={(e) => e.target.style.color = '#fff'}
+                  onMouseEnter={(e) => { e.target.style.color = 'var(--link-hover)'; }}
+                  onMouseLeave={(e) => { e.target.style.color = 'var(--white)'; }}
                 >
                   Liên Hệ Trực Tiếp Với AI
                 </button>
@@ -95,7 +243,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
                     className="border-0 bg-transparent"
                     style={{
-                      color: '#fff',
+                      color: 'var(--white)',
                       padding: '0',
                       display: 'flex',
                       alignItems: 'center',
@@ -119,8 +267,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                         top: '100%',
                         left: '0',
                         marginTop: '5px',
-                        backgroundColor: '#fff',
-                        border: '1px solid #ddd',
+                        backgroundColor: 'var(--bg-color)',
+                        border: '1px solid var(--border-2)',
                         borderRadius: '4px',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                         minWidth: '150px',
@@ -134,7 +282,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                           className="dropdown-item"
                           onClick={() => changeLanguage('vi')}
                           style={{
-                            color: i18n.language === 'vi' ? '#3040D6' : '#333',
+                            color: i18n.language === 'vi' ? 'var(--primary-color)' : 'var(--dropdown-text)',
                             padding: '8px 16px',
                             background: 'transparent',
                             border: 'none',
@@ -147,8 +295,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                             gap: '8px',
                             transition: 'background-color 0.2s ease'
                           }}
-                          onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                          onMouseEnter={(e) => { e.target.style.backgroundColor = 'var(--surface-hover)'; }}
+                          onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
                           <i className="fa-solid fa-check" style={{ 
                             opacity: i18n.language === 'vi' ? 1 : 0,
@@ -162,7 +310,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                           className="dropdown-item"
                           onClick={() => changeLanguage('en')}
                           style={{
-                            color: i18n.language === 'en' ? '#3040D6' : '#333',
+                            color: i18n.language === 'en' ? 'var(--primary-color)' : 'var(--dropdown-text)',
                             padding: '8px 16px',
                             background: 'transparent',
                             border: 'none',
@@ -175,8 +323,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                             gap: '8px',
                             transition: 'background-color 0.2s ease'
                           }}
-                          onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
-                          onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                          onMouseEnter={(e) => { e.target.style.backgroundColor = 'var(--surface-hover)'; }}
+                          onMouseLeave={(e) => { e.target.style.backgroundColor = 'transparent'; }}
                         >
                           <i className="fa-solid fa-check" style={{ 
                             opacity: i18n.language === 'en' ? 1 : 0,
@@ -199,7 +347,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                       id="userDropdown" 
                       data-bs-toggle="dropdown"
                       style={{ 
-                        color: '#fff',
+                        color: 'var(--white)',
                         fontWeight: '500'
                       }}
                     >
@@ -208,8 +356,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     <ul 
                       className="dropdown-menu"
                       style={{
-                        backgroundColor: '#fff',
-                        border: '1px solid #ddd',
+                        backgroundColor: 'var(--bg-color)',
+                        border: '1px solid var(--border-2)',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
                         minWidth: '200px'
                       }}
@@ -218,7 +366,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                         <Link 
                           className="dropdown-item" 
                           to="/profile"
-                          style={{ color: '#333', padding: '8px 16px' }}
+                          style={{ color: 'var(--dropdown-text)', padding: '8px 16px' }}
                         >
                           <i className="fa-solid fa-user me-2"></i> {t('header.top.myAccount')}
                         </Link>
@@ -227,7 +375,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                         <Link 
                           className="dropdown-item" 
                           to="/wishlist"
-                          style={{ color: '#333', padding: '8px 16px' }}
+                          style={{ color: 'var(--dropdown-text)', padding: '8px 16px' }}
                         >
                           <i className="fa-solid fa-heart me-2"></i> {t('header.top.wishlist')}
                         </Link>
@@ -236,7 +384,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                         <Link 
                           className="dropdown-item" 
                           to="/shop-cart"
-                          style={{ color: '#333', padding: '8px 16px' }}
+                          style={{ color: 'var(--dropdown-text)', padding: '8px 16px' }}
                         >
                           <i className="fa-solid fa-shopping-cart me-2"></i> {t('header.top.cart')}
                         </Link>
@@ -247,7 +395,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                           className="dropdown-item" 
                           onClick={logout}
                           style={{ 
-                            color: '#dc3545', 
+                            color: 'var(--danger-color)', 
                             padding: '8px 16px',
                             background: 'transparent',
                             border: 'none',
@@ -283,7 +431,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
           <div className="header-main">
             <div className="container">
               <div className="row align-items-center">
-                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                <div className="col-2 col-lg-2">
                   <div className="header-left">
                     <div className="logo">
                       <Link to="/" className="header-logo">
@@ -292,7 +440,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-6 col-md-6 col-lg-8 col-xl-8 col-xxl-8">
+                <div className="col-5 col-lg-5">
                   <div className="mean__menu-wrapper d-flex justify-content-center">
                     <div className="main-menu">
                       <nav>
@@ -324,16 +472,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                             </Link>
                             <ul className="submenu">
                               <li><Link to="/about">{t('header.menu.about')}</Link></li>
-                              <li className="has-dropdown">
-                                <Link to="/team">
-                                  {t('header.menu.team')}
-                                  <i className="fas fa-angle-down"></i>
-                                </Link>
-                                <ul className="submenu">
-                                  <li><Link to="/team">{t('header.menu.team')}</Link></li>
-                                  <li><Link to="/team-details">{t('header.menu.teamDetails')}</Link></li>
-                                </ul>
-                              </li>
+                              <li><Link to="/authors">{t('header.menu.authors') || 'Tác giả'}</Link></li>
                               <li><Link to="/faq">{t('header.menu.faq')}</Link></li>
                             </ul>
                           </li>
@@ -355,7 +494,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                {renderSearchBox('sticky')}
+                <div className="col-2 col-lg-2">
                   <div className="header-right d-flex justify-content-end">
                     <div className="menu-cart">
                       <Link 
@@ -397,7 +537,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
           <div className="header-main">
             <div className="container">
               <div className="row align-items-center">
-                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                <div className="col-2 col-lg-2">
                   <div className="header-left">
                     <div className="logo">
                       <Link to="/" className="header-logo">
@@ -406,7 +546,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-6 col-md-6 col-lg-8 col-xl-8 col-xxl-8">
+                <div className="col-5 col-lg-5">
                   <div className="mean__menu-wrapper d-flex justify-content-center">
                     <div className="main-menu">
                       <nav id="mobile-menu">
@@ -438,16 +578,7 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                             </Link>
                             <ul className="submenu">
                               <li><Link to="/about">{t('header.menu.about')}</Link></li>
-                              <li className="has-dropdown">
-                                <Link to="/team">
-                                  {t('header.menu.team')}
-                                  <i className="fas fa-angle-down"></i>
-                                </Link>
-                                <ul className="submenu">
-                                  <li><Link to="/team">{t('header.menu.team')}</Link></li>
-                                  <li><Link to="/team-details">{t('header.menu.teamDetails')}</Link></li>
-                                </ul>
-                              </li>
+                              <li><Link to="/authors">{t('header.menu.authors') || 'Tác giả'}</Link></li>
                               <li><Link to="/faq">{t('header.menu.faq')}</Link></li>
                             </ul>
                           </li>
@@ -469,7 +600,8 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
                     </div>
                   </div>
                 </div>
-                <div className="col-3 col-md-3 col-lg-2 col-xl-2 col-xxl-2">
+                {renderSearchBox('main')}
+                <div className="col-2 col-lg-2">
                   <div className="header-right d-flex justify-content-end">
                     <div className="menu-cart">
                       <Link 
@@ -506,9 +638,13 @@ const Header = ({ onToggleSidebar, onShowLogin }) => {
       </header>
 
       {/* AI Chat Assistant */}
-      <AIChatAssistant 
-        isOpenExternal={showAIChat} 
-        onClose={() => setShowAIChat(false)} 
+      <AIChatAssistant
+        isOpenExternal={showAIChat}
+        pageBookContext={aiPageBookContext}
+        onClose={() => {
+          setShowAIChat(false);
+          setAiPageBookContext(null);
+        }}
       />
     </>
   );

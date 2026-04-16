@@ -1,26 +1,43 @@
-/* Card ảnh sản phẩm – giống template */
-.shop-box-items .book-thumb{
-    aspect-ratio: 4 / 5;   /* tỉ lệ 4:5 như demo */
-    width: 100%;
-    overflow: hidden;
-    display: block;
-  }
-  
-  /* Đảm bảo thẻ a/img chiếm full khung */
-  .shop-box-items .book-thumb a,
-  .shop-box-items .book-thumb img{
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-  
-  /* Ảnh fill khung, cắt dư cho đều */
-  .shop-box-items .book-thumb img{
-    object-fit: cover;
-    /* Nếu main.css đang giới hạn kích thước, ghi đè luôn: */
-    max-width: none !important;
-    max-height: none !important;
-  }
+/* --- Ảnh bìa sách: khung 3:4 cố định, object-fit cover, viền nhẹ --- */
+:root {
+  --book-cover-aspect: 3 / 4;
+  --book-cover-surface: #f4f5f7;
+}
+
+.shop-box-items .book-thumb {
+  padding: 0 !important;
+  height: auto !important;
+  aspect-ratio: var(--book-cover-aspect);
+  min-height: 240px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--book-cover-surface) !important;
+  border-radius: 12px;
+  border: 1px solid #eee;
+}
+
+.shop-box-items .book-thumb > a.book-cover-frame-link,
+.shop-box-items .book-thumb > a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shop-box-items .book-thumb > a > img.book-cover-img,
+.shop-box-items .book-thumb > a > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  max-width: none !important;
+  max-height: none !important;
+}
 
 /* Fix breadcrumb divider - xóa URL gramentheme.com */
 .breadcrumb {
@@ -30,5 +47,1477 @@
 .breadcrumb-item + .breadcrumb-item::before {
   content: var(--bs-breadcrumb-divider, "/") !important;
   color: var(--bs-breadcrumb-divider-color, #6c757d);
+}
+
+/* Shop list view (shop-list) – prevent book images from overflowing */
+.shop-default-wrapper .shop-list-items {
+  overflow: hidden;
+}
+
+.shop-default-wrapper .shop-list-items .shop-list-thumb {
+  /* Override template's huge padding that can cause layout issues */
+  padding: 16px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  max-width: 260px;
+  flex: 0 0 260px;
+}
+
+@media (max-width: 1399px) {
+  .shop-default-wrapper .shop-list-items .shop-list-thumb {
+    max-width: 300px;
+    flex-basis: 300px;
+  }
+}
+
+@media (max-width: 575px) {
+  .shop-default-wrapper .shop-list-items .shop-list-thumb {
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
+
+.shop-default-wrapper .shop-list-items .shop-list-thumb a.book-cover-frame-link,
+.shop-default-wrapper .shop-list-items .shop-list-thumb a {
+  width: 180px;
+  max-width: 100%;
+  aspect-ratio: var(--book-cover-aspect);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--book-cover-surface);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.shop-default-wrapper .shop-list-items .shop-list-thumb img.book-cover-img,
+.shop-default-wrapper .shop-list-items .shop-list-thumb img {
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Đồng bộ thêm cho các biến thể card khác */
+.shop-box-items.style-3 .book-thumb,
+.shop-box-items.style-4 .book-thumb {
+  aspect-ratio: var(--book-cover-aspect) !important;
+  background: var(--book-cover-surface) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+.shop-box-items.style-3 .book-thumb > a > img,
+.shop-box-items.style-4 .book-thumb > a > img {
+  width: calc(100% - 10px) !important;
+  height: calc(100% - 10px) !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* =========================
+   Lively UX (animations + micro-interactions)
+   ========================= */
+
+:root {
+  --live-accent: #56ccf2;
+  --live-accent-2: #3040d6;
+  --live-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Reveal-on-scroll for existing .wow elements (React-friendly) */
+.wow.wow-pending {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+}
+
+.wow.fadeInRight.wow-pending {
+  transform: translate3d(18px, 0, 0);
+}
+.wow.fadeInLeft.wow-pending {
+  transform: translate3d(-18px, 0, 0);
+}
+.wow.fadeInDown.wow-pending {
+  transform: translate3d(0, -18px, 0);
+}
+.wow.zoomIn.wow-pending {
+  transform: scale(0.96);
+}
+
+.wow.wow-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 650ms var(--live-ease),
+    transform 650ms var(--live-ease);
+  transition-delay: var(--wow-delay, 0s);
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wow.wow-pending {
+    opacity: 1;
+    transform: none;
+  }
+  .wow,
+  .wow.wow-visible {
+    transition: none !important;
+  }
+}
+
+/* Hero: subtle animated glow overlay */
+.hero-section.hero-1 {
+  position: relative;
+  overflow: hidden;
+}
+.hero-section.hero-1::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(closest-side at 20% 30%, rgba(86, 204, 242, 0.35), transparent 65%),
+    radial-gradient(closest-side at 75% 20%, rgba(48, 64, 214, 0.25), transparent 60%),
+    radial-gradient(closest-side at 60% 85%, rgba(255, 101, 0, 0.18), transparent 60%);
+  filter: blur(28px);
+  opacity: 0.8;
+  animation: heroGlow 12s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-section.hero-1 > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes heroGlow {
+  from { transform: translate3d(-2%, -1%, 0) rotate(0deg); }
+  to { transform: translate3d(2%, 1%, 0) rotate(8deg); }
+}
+
+/* Bookle hero: sách & kệ gỗ — không dùng ảnh stock người mẫu */
+.hero-bookle.hero-1 {
+  background:
+    radial-gradient(ellipse 90% 70% at 85% 15%, color-mix(in srgb, var(--primary-color) 9%, transparent), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 10% 90%, color-mix(in srgb, var(--secondary-color) 6%, transparent), transparent 50%),
+    linear-gradient(180deg, #faf6ef 0%, #f0e8dc 48%, #e8dfd0 100%),
+    var(--banner-url) center / cover no-repeat;
+}
+.hero-bookle.hero-1::before {
+  background:
+    radial-gradient(closest-side at 25% 35%, color-mix(in srgb, var(--primary-color) 12%, transparent), transparent 62%),
+    radial-gradient(closest-side at 70% 60%, color-mix(in srgb, var(--secondary-color) 8%, transparent), transparent 58%);
+  opacity: 0.55;
+  filter: blur(36px);
+}
+.hero-bookle .hero-items.hero-bookle-items .hero-content {
+  padding-top: 100px !important;
+  padding-bottom: 100px !important;
+}
+@media (max-width: 991px) {
+  .hero-bookle .hero-items.hero-bookle-items .hero-content {
+    padding-top: 72px !important;
+    padding-bottom: 48px !important;
+  }
+}
+.hero-bookle .hero-content h6.hero-badge {
+  font-family: inherit !important;
+  font-style: normal !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  text-transform: none !important;
+  letter-spacing: 0.02em !important;
+  background: rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(3, 98, 128, 0.2) !important;
+}
+.hero-bookle .hero-content .hero-badge-label {
+  background: linear-gradient(135deg, var(--primary-color, #036280), color-mix(in srgb, var(--primary-color, #036280), #000 10%)) !important;
+  color: var(--primary-contrast, #fff) !important;
+}
+.hero-bookle .hero-content h1.hero-bookle-headline {
+  font-family: inherit !important;
+  font-size: clamp(36px, 5.2vw, 58px) !important;
+  line-height: 1.08 !important;
+  font-weight: 900 !important;
+  color: var(--primary-color, #0f172a) !important;
+  margin-bottom: 16px !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  letter-spacing: -0.02em !important;
+}
+.hero-bookle .hero-content .hero-highlight {
+  color: var(--secondary-color, var(--primary-color)) !important;
+  font-weight: 900 !important;
+}
+.hero-bookle .hero-content .hero-highlight::after {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--primary-color) 20%, transparent), rgba(14, 116, 144, 0.25)) !important;
+  bottom: 0.08em !important;
+  height: 0.42em !important;
+}
+.hero-bookle-lead {
+  max-width: 34rem;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-color);
+  margin-bottom: 0;
+}
+.hero-bookle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+.hero-bookle-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--primary-color);
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--primary-color) 35%, transparent);
+  background: rgba(255, 255, 255, 0.5);
+  transition: background 180ms ease, border-color 180ms ease;
+}
+.hero-bookle-btn-secondary:hover {
+  background: color-mix(in srgb, var(--primary-color) 8%, transparent);
+  border-color: var(--primary-color);
+  color: color-mix(in srgb, var(--primary-color), #000000 18%);
+}
+
+/* Minh họa kệ sách */
+.hero-bookle-visual-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0 40px;
+}
+.hero-bookle-visual-stack {
+  width: 100%;
+  max-width: 460px;
+}
+.hero-bookle-shelf {
+  width: 100%;
+  max-width: 460px;
+  padding: 22px 20px 18px;
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.2));
+  border: 1px solid rgba(61, 41, 20, 0.12);
+  box-shadow:
+    0 18px 50px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+.hero-bookle-shelf-inner {
+  background: linear-gradient(180deg, #5c4033 0%, #3d2914 55%, #2a1d12 100%);
+  border-radius: 12px;
+  padding: 18px 14px 14px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.hero-bookle-shelf-tier {
+  margin-bottom: 10px;
+}
+.hero-bookle-shelf-tier:last-child {
+  margin-bottom: 0;
+}
+.hero-bookle-spines {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  min-height: 120px;
+  padding: 0 6px 0;
+}
+.hero-bookle-spine {
+  width: 44px;
+  border-radius: 4px 4px 2px 2px;
+  box-shadow:
+    inset -2px 0 0 rgba(255, 255, 255, 0.12),
+    inset 2px 0 4px rgba(0, 0, 0, 0.15),
+    2px 4px 10px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+.hero-bookle-board {
+  height: 10px;
+  margin-top: 6px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #a67c52, #6b4f3a);
+  box-shadow: 0 3px 0 #3d2914, 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+.hero-bookle-shelf-caption {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* Campaign cards: lấp phần phải hero để bớt trống */
+.hero-bookle-campaigns {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+.hero-bookle-campaign-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 16%, transparent);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  animation: heroCampaignFloat 6s ease-in-out infinite;
+}
+.hero-bookle-campaign-card:nth-child(2) {
+  animation-delay: 1.2s;
+}
+.hero-bookle-campaign-card:nth-child(3) {
+  animation-delay: 2.1s;
+}
+.hero-bookle-campaign-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary-color), #0e7490);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.hero-bookle-campaign-card h6 {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.hero-bookle-campaign-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #475569;
+}
+@keyframes heroCampaignFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@media (max-width: 991px) {
+  .hero-bookle-visual-stack {
+    max-width: 420px;
+  }
+  .hero-bookle-campaigns {
+    margin-top: 10px;
+  }
+}
+
+/* Hero title emphasis */
+.hero-content .hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.hero-content .hero-badge-label {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff6500, #ffb347);
+  color: #fff;
+  font-weight: 700;
+}
+.hero-content .hero-badge-value {
+  color: #fff;
+  font-weight: 600;
+}
+.hero-content .hero-highlight {
+  position: relative;
+  display: inline-block;
+  padding-inline: 4px;
+}
+.hero-content .hero-highlight::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.15em;
+  height: 0.5em;
+  background: linear-gradient(90deg, rgba(255, 213, 128, 0.75), rgba(255, 101, 0, 0.7));
+  opacity: 0.9;
+  z-index: -1;
+  border-radius: 999px;
+}
+
+/* Buttons: lift + sheen */
+.theme-btn {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 220ms var(--live-ease),
+    box-shadow 220ms var(--live-ease),
+    filter 220ms var(--live-ease);
+  will-change: transform;
+}
+.theme-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+  filter: saturate(1.04);
+}
+.theme-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+.theme-btn::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 35%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 650ms var(--live-ease);
+  pointer-events: none;
+}
+.theme-btn:hover::after {
+  transform: translateX(120%);
+}
+
+/* Product cards: hover depth + image zoom */
+.shop-box-items {
+  transition: transform 260ms var(--live-ease), box-shadow 260ms var(--live-ease);
+}
+.shop-box-items:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.12);
+}
+.shop-box-items .book-thumb .book-cover-img {
+  transition: transform 520ms var(--live-ease);
+}
+.shop-box-items:hover .book-thumb .book-cover-img {
+  transform: scale(1.04);
+}
+
+/* Product card typography + calmer CTA */
+.shop-box-items .product-card-title {
+  margin-bottom: 6px !important;
+}
+.shop-box-items .product-card-title-link {
+  color: #0f172a !important;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+}
+.shop-box-items .product-card-title-link:hover {
+  color: var(--primary-color) !important;
+}
+.shop-box-items .product-card-category {
+  margin-bottom: 6px !important;
+}
+.shop-box-items .product-card-category-link {
+  font-size: 12px;
+  color: #7b8794 !important;
+  text-decoration: none;
+}
+.shop-box-items .product-card-author {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #667085;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shop-box-items .price-list del {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+.shop-box-items .product-card-rating {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #f59e0b;
+  display: flex;
+  gap: 3px;
+}
+
+/* Ghost CTA: less aggressive than filled button */
+.shop-box-items .shop-button {
+  transition: opacity 220ms var(--live-ease), transform 220ms var(--live-ease);
+}
+.shop-box-items .product-card-ghost-btn {
+  width: 100%;
+  border: 1px solid rgba(3, 98, 128, 0.45) !important;
+  background: transparent !important;
+  color: var(--primary-color) !important;
+  box-shadow: none !important;
+  font-weight: 600;
+}
+.shop-box-items .product-card-ghost-btn::after {
+  display: none !important;
+}
+.shop-box-items .product-card-ghost-btn:hover {
+  background: rgba(3, 98, 128, 0.08) !important;
+  border-color: var(--primary-color) !important;
+  transform: translateY(-1px);
+  box-shadow: none !important;
+}
+.shop-box-items .product-card-ghost-btn:disabled {
+  border-color: #c9d2db !important;
+  color: #98a2b3 !important;
+  background: #f8fafc !important;
+  cursor: not-allowed;
+}
+
+/* Desktop: keep CTA subtle until hover to reduce visual noise */
+@media (hover: hover) and (pointer: fine) {
+  .shop-box-items .shop-button {
+    opacity: 0.1;
+    transform: translateY(6px);
+  }
+  .shop-box-items:hover .shop-button,
+  .shop-box-items:focus-within .shop-button {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Category cards on Home */
+.category-card {
+  display: block;
+  padding: 18px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  transition: transform 240ms var(--live-ease), box-shadow 240ms var(--live-ease), border-color 240ms var(--live-ease);
+  text-decoration: none;
+}
+.category-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(86, 204, 242, 0.5);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.1);
+}
+.category-card .category-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(86, 204, 242, 0.22), rgba(48, 64, 214, 0.14));
+}
+.category-card .category-icon i {
+  color: #0f172a;
+}
+
+/* Back-to-top: conic progress ring + smooth reveal */
+.back-to-top {
+  --progress: 0%;
+  position: fixed;
+  right: 22px;
+  bottom: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 999px;
+  border: 0;
+  padding: 3px;
+  cursor: pointer;
+  background: conic-gradient(
+    var(--live-accent) 0 var(--progress),
+    rgba(3, 98, 128, 0.18) var(--progress) 100%
+  );
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(10px) scale(0.92);
+  pointer-events: none;
+  transition: opacity 220ms var(--live-ease), transform 220ms var(--live-ease);
+  z-index: 9999;
+}
+.back-to-top::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background: #036280;
+}
+.back-to-top i {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+.back-to-top.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Cursor follower: modern soft blob (desktop only) */
+.cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 9999999;
+}
+.cursor-follower__dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 30% 30%, rgba(86, 204, 242, 0.9), rgba(48, 64, 214, 0.25));
+  box-shadow: 0 10px 28px rgba(48, 64, 214, 0.18);
+  opacity: 0.9;
+  transition: width 180ms var(--live-ease), height 180ms var(--live-ease), opacity 180ms var(--live-ease), filter 180ms var(--live-ease);
+  filter: saturate(1.05);
+}
+.cursor-follower.cursor-hover .cursor-follower__dot {
+  width: 34px;
+  height: 34px;
+  opacity: 0.65;
+  filter: blur(0.2px);
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor-follower {
+    display: none !important;
+  }
+}
+
+/* ========= Header Search Bar ========= */
+.header-search-box {
+  position: relative !important;
+  width: 100% !important;
+  z-index: 100; 
+}
+.header-search-form {
+  display: flex !important;
+  align-items: center !important;
+  background: #fff !important;
+  border: 1px solid #D0E1E7 !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  transition: all 220ms ease !important;
+  height: 46px !important;
+  position: relative !important;
+}
+.header-search-form:focus-within {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px rgba(3, 98, 128, 0.12) !important;
+}
+.header-search-input {
+  flex: 1 !important;
+  border: 0 !important;
+  background: #fff !important;
+  color: var(--header, #012E4A) !important;
+  padding: 0 46px 0 16px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  outline: none !important;
+  height: 100% !important;
+  line-height: 46px !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 100% !important;
+}
+.header-search-input::placeholder {
+  color: #888 !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+}
+.header-search-btn {
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  color: #888 !important;
+  padding: 0 14px !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: color 180ms ease !important;
+  z-index: 2 !important;
+}
+.header-search-btn:hover {
+  color: var(--primary-color) !important;
+}
+
+/* Dropdown results */
+.header-search-dropdown {
+  position: absolute !important;
+  top: calc(100% + 4px) !important;
+  left: 0 !important;
+  width: 380px !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18) !important;
+  border: 1px solid #D0E1E7 !important;
+  z-index: 99999 !important;
+  overflow: hidden !important;
+  animation: searchDropIn 150ms ease !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+}
+@keyframes searchDropIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.header-search-loading,
+.header-search-empty {
+  padding: 20px 16px !important;
+  color: #888 !important;
+  font-size: 13px !important;
+  text-align: center !important;
+}
+.header-search-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 10px 14px !important;
+  text-decoration: none !important;
+  color: var(--header, #012E4A) !important;
+  transition: background 150ms ease !important;
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+.header-search-item:last-of-type {
+  border-bottom: none !important;
+}
+.header-search-item:hover {
+  background: #f5f8fa !important;
+  color: var(--header, #012E4A) !important;
+}
+.header-search-item-img {
+  width: 44px !important;
+  aspect-ratio: var(--book-cover-aspect) !important;
+  height: auto !important;
+  max-height: 72px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border-radius: 4px !important;
+  flex-shrink: 0 !important;
+  background: var(--book-cover-surface) !important;
+  border: 1px solid #e5e5e5 !important;
+}
+.header-search-item-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+.header-search-item-name {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  color: var(--header, #012E4A) !important;
+  line-height: 1.3 !important;
+}
+.header-search-item-author {
+  font-size: 12px !important;
+  color: #888 !important;
+  margin-top: 2px !important;
+}
+.header-search-item-price {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: var(--primary-color) !important;
+  margin-top: 3px !important;
+}
+.header-search-viewall {
+  display: block !important;
+  padding: 12px 16px !important;
+  text-align: center !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  text-decoration: none !important;
+  border-top: 1px solid #D0E1E7 !important;
+  background: #f5f8fa !important;
+  transition: background 150ms ease !important;
+}
+.header-search-viewall:hover {
+  background: #e8f0f4 !important;
+  color: var(--header, #012E4A) !important;
+}
+.header-search-viewall i {
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+/* Trang chi tiết sách: khung ảnh + hover zoom + viền */
+.shop-details-wrapper .shop-details-image .shop-details-thumb {
+  padding: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--book-cover-surface) !important;
+  border-radius: var(--card-radius, 16px);
+  border: 1px solid #f0f0f0 !important;
+  box-shadow: var(--card-shadow, 0 4px 12px rgba(0,0,0,0.05));
+  min-height: 0;
+  overflow: hidden;
+}
+
+.shop-details-wrapper .shop-details-image .shop-details-cover-frame {
+  width: 100%;
+  aspect-ratio: var(--book-cover-aspect);
+  max-height: min(72vh, 520px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.shop-details-wrapper .shop-details-image .shop-details-cover-frame .book-cover-img {
+  width: 100%;
+  height: 100%;
+  max-height: min(72vh, 520px);
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transition: transform 450ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.shop-details-wrapper .shop-details-image .shop-details-cover-frame:hover .book-cover-img {
+  transform: scale(1.12);
+}
+
+/* Ảnh nhỏ: khung dọc đồng bộ, không ô vuông */
+.shop-details-wrapper .shop-details-image .nav .nav-item .nav-link {
+  width: 72px !important;
+  height: auto !important;
+  aspect-ratio: var(--book-cover-aspect) !important;
+  min-height: 0 !important;
+  padding: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.shop-details-wrapper .shop-details-image .nav .nav-item .nav-link img.shop-details-nav-thumb-img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+}
+
+/* Giỏ / thanh toán: thumbnail bìa */
+.cart-thumb-frame,
+.book-mini-cover {
+  width: 100%;
+  aspect-ratio: var(--book-cover-aspect);
+  max-width: 88px;
+  background: var(--book-cover-surface);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e8e8e8;
+}
+
+.cart-thumb-frame img,
+.book-mini-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.book-mini-cover--sm {
+  max-width: 52px;
+  flex-shrink: 0;
+}
+
+.book-mini-cover--xs {
+  max-width: 40px;
+  flex-shrink: 0;
+}
+
+.cart-thumb-frame--compact {
+  max-width: 64px;
+}
+
+/* Giỏ hàng: bảng cố định cột, căn giữa dọc, tách rõ SL / tổng dòng */
+.main-cart-wrapper .table-responsive {
+  width: 100%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table {
+  table-layout: fixed;
+  width: 100%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead tr th {
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 14px;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--product,
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--product {
+  width: 40%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--price,
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--price {
+  width: 15%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--qty,
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--qty {
+  width: 18%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--line-total,
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--line-total {
+  width: 17%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--remove,
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--remove {
+  width: 10%;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th {
+  vertical-align: bottom;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.main-cart-wrapper .table-responsive .table.cart-table thead th.cart-col--product {
+  padding-left: 0;
+}
+.main-cart-wrapper .table-responsive .table.cart-table tbody td {
+  vertical-align: middle;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--product {
+  padding-left: 0;
+}
+.main-cart-wrapper .table-responsive .table.cart-table tbody td.cart-col--qty {
+  overflow: visible;
+}
+.cart-price-cell {
+  display: inline-block;
+  text-align: right;
+  min-width: 0;
+}
+.cart-line-total-price {
+  white-space: nowrap;
+}
+.main-cart-wrapper .cart-quantity-controls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 4px 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #f5f5f5;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.main-cart-wrapper .cart-quantity-controls .qty-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #0f172a;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.main-cart-wrapper .cart-quantity-controls .qty-btn:hover:not(:disabled) {
+  background: #e8e8e8;
+  color: var(--primary-color);
+}
+.main-cart-wrapper .cart-quantity-controls .qty-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.main-cart-wrapper .cart-quantity-controls .qty-input {
+  width: 44px;
+  min-width: 36px;
+  padding: 4px 2px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f172a;
+  -moz-appearance: textfield;
+}
+.main-cart-wrapper .cart-quantity-controls .qty-input::-webkit-outer-spin-button,
+.main-cart-wrapper .cart-quantity-controls .qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.main-cart-wrapper .table-responsive .table.cart-table .remove-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.main-cart-wrapper .table-responsive .table.cart-table .remove-icon:hover {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+}
+.cart-product-items {
+  gap: 10px;
+}
+.cart-product-items .product-content {
+  min-width: 0;
+}
+.cart-product-items .product-content h4 {
+  font-size: 15px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cart-product-items .product-content h4 a {
+  color: #0f172a;
+  text-decoration: none;
+}
+.cart-product-items .product-content h4 a:hover {
+  color: var(--primary-color);
+}
+.cart-product-items .product-content p.small {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 767.98px) {
+  .main-cart-wrapper .table-responsive .table thead {
+    white-space: nowrap;
+  }
+}
+
+/* Home shelves: horizontal carousel-like strips */
+.home-shelf-block {
+  margin-bottom: 42px;
+}
+.home-shelf-block h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+.home-shelf-more {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.home-shelf-more:hover {
+  color: #024f67;
+}
+.home-shelf-carousel .row {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 18px;
+  margin: 0;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+}
+.home-shelf-carousel .row > [class*="col-"] {
+  flex: 0 0 270px;
+  max-width: 270px;
+  padding: 0;
+  scroll-snap-align: start;
+}
+.home-shelf-carousel .row::-webkit-scrollbar {
+  height: 7px;
+}
+.home-shelf-carousel .row::-webkit-scrollbar-thumb {
+  background: rgba(3, 98, 128, 0.35);
+  border-radius: 999px;
+}
+.home-recently-viewed-strip {
+  margin-bottom: 4px;
+}
+.home-recently-viewed-shop-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+.home-recently-viewed-shop-link:hover {
+  text-decoration: underline;
+}
+
+/* ═══════════════════════════════════════
+   BOOKLE UI REFINEMENTS
+   ═══════════════════════════════════════ */
+
+/* 1. Section spacing — thoáng đãng */
+.book-shop-section,
+.shop-section,
+.team-section,
+.faq-section,
+.category-section,
+.recently-viewed-section,
+section[class*="section"] {
+  padding-top: clamp(40px, 8vh, 80px);
+  padding-bottom: clamp(40px, 8vh, 80px);
+}
+
+/* 2. Hero typography — dynamic color + extra bold */
+.hero-bookle .hero-content h1.hero-bookle-headline {
+  font-size: clamp(36px, 5.2vw, 58px) !important;
+  font-weight: 900 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--primary-color, #0f172a) !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.hero-bookle .hero-content .hero-highlight {
+  color: var(--secondary-color, var(--primary-color)) !important;
+  font-weight: 900 !important;
+}
+.hero-bookle-lead {
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.72;
+}
+
+/* 3. CTA — gradient + glow + pulse */
+@keyframes ctaPulse {
+  0%,100% { box-shadow: 0 4px 14px color-mix(in srgb, var(--primary-color) 35%, transparent); }
+  50%     { box-shadow: 0 4px 28px color-mix(in srgb, var(--primary-color) 55%, transparent); }
+}
+.hero-bookle .hero-bookle-actions .theme-btn {
+  animation: ctaPulse 2.5s ease-in-out infinite;
+  background: linear-gradient(135deg, var(--primary-color), color-mix(in srgb, var(--primary-color), #000 20%)) !important;
+  border: none !important;
+  color: var(--primary-contrast, #fff) !important;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 15px 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--primary-color) 30%, transparent);
+}
+.hero-bookle .hero-bookle-actions .theme-btn:hover {
+  animation: none;
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--primary-color) 40%, transparent);
+  filter: brightness(1.08);
+}
+
+/* 4. AI theme — auto contrast text on dynamic bg */
+.footer-section,
+.footer-bg {
+  background-color: var(--header, #012e4a) !important;
+}
+.back-to-top::before {
+  background: var(--primary-color, #036280);
+}
+
+/* Slogan banner contrast */
+.bookle-slogan-banner {
+  background: linear-gradient(90deg, var(--primary-color, #036280), var(--secondary-color, #ff6500));
+  color: #fff;
+}
+
+/* Auto-contrast: buttons/badges trên nền primary/secondary */
+.theme-btn,
+.newsletter-btn,
+.hero-bookle-btn-primary {
+  color: var(--primary-contrast, #fff) !important;
+}
+.hero-bookle .hero-badge-label {
+  color: var(--secondary-contrast, #fff) !important;
+}
+
+/* 5. Footer refinement — 4 columns, bố cục Cần Thơ */
+.footer-widgets-wrapper .single-footer-widget .widget-head h3 {
+  color: rgba(255,255,255,0.95) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+}
+.footer-widgets-wrapper .single-footer-widget .list-area li a {
+  color: rgba(255,255,255,0.68) !important;
+  transition: color 180ms ease, padding-left 180ms ease;
+}
+.footer-widgets-wrapper .single-footer-widget .list-area li a:hover {
+  color: #fff !important;
+  padding-left: 4px;
+}
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.footer-content p {
+  color: rgba(255,255,255,0.65) !important;
+}
+.social-icon a {
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+.social-icon a:hover {
+  transform: translateY(-3px);
+  opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════
+   DYNAMIC THEME SYSTEM v3
+   ═══════════════════════════════════════ */
+
+/* ── Global body / page ── */
+body {
+  background-color: var(--bg-body, #fff);
+  color: var(--text-main, #0f172a);
+}
+
+/* ── 1. Contrast text on primary/secondary surfaces ── */
+.theme-btn,
+.newsletter-btn,
+.hero-bookle .hero-bookle-actions .theme-btn,
+.hero-bookle .hero-badge-label,
+.post-box li,
+.back-to-top i {
+  color: var(--text-on-primary, #fff) !important;
+}
+
+/* ── 2. Price — stable warm tone ── */
+.shop-box-items .price-list li:last-child,
+.shop-details .price-list li:last-child,
+.shop-details-content .price-list h3,
+.shop-list-items .price-list li:last-child {
+  color: var(--price-color, #e67e22) !important;
+  font-weight: 700;
+}
+
+/* ── Status success ── */
+.shop-details-content .title-wrapper h5,
+.in-stock-badge {
+  color: var(--status-success, #16a34a) !important;
+}
+
+/* ── 3. Typography — adaptive ── */
+.hero-bookle .hero-content h1.hero-bookle-headline,
+.hero-bookle .hero-content .hero-highlight {
+  font-family: var(--theme-font, 'Inter', sans-serif) !important;
+}
+h1, h2, h3, h4, .section-title h2 {
+  color: var(--text-main, #0f172a);
+}
+p, .text-muted, .description {
+  color: var(--text-secondary, #64748b);
+}
+
+/* ── 4. Borders ── */
+.border, hr,
+.category-box,
+.box-check,
+.table-bordered td,
+.table-bordered th {
+  border-color: var(--border-color, #e2e8f0) !important;
+}
+
+/* ── 5. Primary hover state ── */
+.theme-btn:hover,
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* ── 6. Shadow — natural tint from primary ── */
+.shop-box-items,
+.category-card,
+.single-footer-widget,
+.contact-info-items {
+  box-shadow: 0 8px 28px var(--shadow-color, rgba(3,98,128,0.1));
+}
+
+/* ── 7. Hero overlay ── */
+.hero-bookle.hero-1::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--hero-overlay);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+.hero-bookle.hero-1 > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 8. Card UI — bg, shadow, radius, text ── */
+.shop-box-items {
+  background: var(--bg-card, #fff);
+  border-radius: var(--card-radius, 12px);
+}
+.shop-box-items .shop-content,
+.shop-box-items .product-card-title-link {
+  color: var(--text-main, #0f172a) !important;
+}
+.shop-box-items .product-card-author,
+.shop-box-items .product-card-category-link {
+  color: var(--text-secondary, #64748b) !important;
+}
+.shop-box-items .book-thumb {
+  border-radius: var(--card-radius, 12px) var(--card-radius, 12px) 0 0;
+}
+
+/* ── 9. Sections ── */
+.book-shop-section,
+.shop-section,
+.faq-section,
+.category-section {
+  background-color: var(--bg-body, #fff);
+}
+
+/* ── 10. Dark mode refinements ── */
+[data-theme-dark="true"] body {
+  background-color: var(--bg-body);
+}
+[data-theme-dark="true"] .shop-box-items {
+  border: 1px solid var(--border-color);
+}
+[data-theme-dark="true"] .shop-box-items .price-list del {
+  color: rgba(255,255,255,0.4) !important;
+}
+[data-theme-dark="true"] .shop-box-items .product-card-ghost-btn {
+  border-color: var(--border-color) !important;
+  color: var(--secondary-color, #ff6500) !important;
+}
+[data-theme-dark="true"] .shop-box-items .product-card-ghost-btn:hover {
+  background: rgba(255,255,255,0.06) !important;
+}
+[data-theme-dark="true"] .breadcrumb-wrapper,
+[data-theme-dark="true"] .section-padding {
+  background-color: var(--bg-body);
+}
+[data-theme-dark="true"] .table,
+[data-theme-dark="true"] .tab-content-wrapper {
+  color: var(--text-main);
+}
+
+/* ═══════════════════════════════════════
+   SHOP DETAILS — Dynamic Theme Polish
+   ═══════════════════════════════════════ */
+
+/* Product title — bold, responsive */
+.shop-details-content .title-wrapper h2 {
+  font-size: clamp(1.5rem, 3.5vw, 1.8rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  color: var(--card-text, #0f172a) !important;
+  margin-bottom: 8px !important;
+}
+
+/* Price — always warm, separated from theme */
+.shop-details-content .price-list h3 {
+  color: var(--price-color, #d32f2f) !important;
+  font-weight: 800 !important;
+  font-size: 1.6rem !important;
+}
+.shop-details-content .price-list del {
+  color: #999 !important;
+  font-size: 1rem;
+}
+
+/* AI button — gradient tech look */
+.bookle-ai-btn {
+  background: linear-gradient(135deg, var(--primary-color, #036280), color-mix(in srgb, var(--primary-color, #036280), #60a5fa 45%)) !important;
+  border: none !important;
+  color: var(--text-on-primary, #fff) !important;
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--primary-color) 25%, transparent);
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+}
+.bookle-ai-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary-color) 35%, transparent) !important;
+  filter: brightness(1.1);
+}
+
+/* Feature checkmarks — dynamic primary */
+.shop-details-content .box-check .check-list i.fa-check {
+  color: var(--primary-color, #036280) !important;
+}
+.shop-details-content .box-check {
+  border-radius: var(--card-radius, 12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 18px 20px;
+  background: var(--card-bg, #fff);
+  border: 1px solid #f0f0f0;
+  margin-top: 16px;
+}
+
+/* Category/metadata box */
+.shop-details-content .category-box {
+  border-radius: var(--card-radius, 12px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 16px 20px;
+  background: var(--card-bg, #fff);
+  border: 1px solid #f0f0f0;
+}
+.shop-details-content .category-list ul li span {
+  color: var(--primary-color, #036280) !important;
+  font-weight: 600;
+}
+
+/* Spacing — thoáng hơn trên mobile */
+.shop-details-content > * + * {
+  margin-top: 16px;
+}
+@media (max-width: 768px) {
+  .shop-details-content .title-wrapper h2 {
+    font-size: 1.4rem !important;
+  }
+  .shop-details-content .price-list h3 {
+    font-size: 1.35rem !important;
+  }
+  .shop-details-content > * + * {
+    margin-top: 14px;
+  }
+}
+
+/* Tabs — active tab uses primary */
+.shop-details-wrapper .single-tab .nav .nav-link.active h6,
+.shop-details-wrapper .single-tab .nav .nav-link:hover h6 {
+  color: var(--primary-color, #036280) !important;
+}
+.shop-details-wrapper .single-tab .nav .nav-link.active {
+  border-bottom-color: var(--primary-color, #036280) !important;
+}
+
+/* Review stars */
+.shop-details-content .star a i.fa-star {
+  color: var(--secondary-color, #f59e0b);
 }
   

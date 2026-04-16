@@ -12,17 +12,17 @@
     },
     "customerSupport": {
       "title": "Customer Support",
-      "storeList": "Store List",
-      "openingHours": "Opening Hours",
-      "contactUs": "Contact Us",
+      "storeList": "How to Order",
+      "openingHours": "FAQ",
+      "contactUs": "Contact & Support",
       "returnPolicy": "Return Policy"
     },
     "categories": {
-      "title": "Categories",
-      "novel": "Novel Books",
-      "poetry": "Poetry Books",
-      "political": "Political Books",
-      "history": "History Books"
+      "title": "Info & Policies",
+      "novel": "About Bookle",
+      "poetry": "Privacy Policy",
+      "political": "Terms of Use",
+      "history": "News & Blog"
     },
     "newsletter": {
       "title": "Newsletter",

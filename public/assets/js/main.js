@@ -1,7 +1,45 @@
 (function ($) {
     "use strict";
 
+    /**
+     * Áp theme Bookle từ localStorage lên <html> trước / song song React (giảm nháy màu).
+     * Khóa `bookle_theme` phải khớp frontend/src/context/ThemeContext.jsx (THEME_STORAGE_KEY).
+     */
+    function applyBookleThemeFromStorage() {
+        try {
+            var raw = localStorage.getItem("bookle_theme");
+            if (!raw) return;
+            var o = JSON.parse(raw);
+            var root = document.documentElement;
+            if (!root || !root.style) return;
+            var map = {
+                primaryColor: "--primary-color",
+                secondaryColor: "--secondary-color",
+                bgColor: "--bg-color",
+                textColor: "--text-color",
+                bannerUrl: "--banner-url"
+            };
+            function bannerVal(v) {
+                if (v == null || v === "" || v === "none") return "none";
+                var s = String(v).trim();
+                if (/^url\s*\(/i.test(s)) return s;
+                if (/^https?:\/\//.test(s) || s.charAt(0) === "/") {
+                    return 'url("' + s.replace(/"/g, '\\"') + '")';
+                }
+                return 'url("' + s + '")';
+            }
+            Object.keys(map).forEach(function (k) {
+                if (o[k] === undefined || o[k] === null) return;
+                var val = o[k];
+                if (k === "bannerUrl") val = bannerVal(val);
+                root.style.setProperty(map[k], String(val));
+            });
+        } catch (e) { /* ignore */ }
+    }
+
     $(document).ready(function () {
+
+        applyBookleThemeFromStorage();
 
         // 01.Mobile Menu  
         $('#mobile-menu').meanmenu({

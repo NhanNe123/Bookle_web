@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../hooks/useWishlist';
 import { useCart } from '../hooks/useCart';
+import { getProductImage } from '../utils/categoryUtils';
 
 const WishlistPage = () => {
   const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
@@ -128,12 +129,15 @@ const WishlistPage = () => {
                           <td>
                             <div className="cart-product-items d-flex align-items-center">
                               <div className="product-image">
-                                <Link to={`/shop-details/${item.slug || item._id}`}>
-                                  <img 
-                                    src={item.images?.[0] || '/assets/img/book/01.png'} 
-                                    alt={item.name}
-                                    style={{ width: '80px', height: 'auto', objectFit: 'cover' }}
-                                  />
+                                <Link to={`/shop-details/${item.slug || item._id}`} className="d-inline-block">
+                                  <div className="cart-thumb-frame">
+                                    <img
+                                      src={getProductImage(item.images, item.coverImage)}
+                                      alt={item.name}
+                                      loading="lazy"
+                                      decoding="async"
+                                    />
+                                  </div>
                                 </Link>
                               </div>
                               <div className="product-content ms-3">

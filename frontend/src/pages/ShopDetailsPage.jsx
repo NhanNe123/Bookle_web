@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ProductCard from '../components/product/ProductCard';
-import { getProductById, getProducts, reviewsAPI } from '../lib/api';
+import { getProductById, getRelatedProducts, reviewsAPI } from '../lib/api';
 import { useCart } from '../hooks/useCart';
 import { useWishlist } from '../hooks/useWishlist';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { formatCategoryName } from '../utils/categoryUtils';
+import { formatCategoryName, encodeImageUrl, PRODUCT_IMAGE_FALLBACK } from '../utils/categoryUtils';
+import { recordRecentlyViewedProductId } from '../utils/recentlyViewed';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 
 const chunkArray = (array, size) => {
@@ -62,7 +63,7 @@ const ShopDetailsPage = () => {
       author: 'John Smith',
       price: 160000,
       compareAtPrice: 200000,
-      images: ['/assets/img/shop-details/01.png'],
+      images: [PRODUCT_IMAGE_FALLBACK],
       rating: 4,
       categories: ['Phiêu lưu'],
       stock: 8,
@@ -74,7 +75,7 @@ const ShopDetailsPage = () => {
       author: 'David Chen',
       price: 195000,
       compareAtPrice: 245000,
-      images: ['/assets/img/shop-details/02.png'],
+      images: [PRODUCT_IMAGE_FALLBACK],
       rating: 5,
       categories: ['Bí ẩn'],
       stock: 5,
@@ -86,7 +87,7 @@ const ShopDetailsPage = () => {
       author: 'Emma Wilson',
       price: 215000,
       compareAtPrice: 265000,
-      images: ['/assets/img/shop-details/03.png'],
+      images: [PRODUCT_IMAGE_FALLBACK],
       rating: 4,
       categories: ['Khoa học viễn tưởng'],
       stock: 9,
@@ -108,43 +109,20 @@ const ShopDetailsPage = () => {
         // Fetch product details
         const productData = await getProductById(id);
         setProduct(productData);
-        
-        // Fetch related products from same categories
-        if (productData.categories && productData.categories.length > 0) {
-          // Fetch products from all categories of current product
-          const relatedPromises = productData.categories.map(category => 
-            getProducts({ 
-              category: category,
-              limit: 8, // Lấy nhiều hơn để có nhiều lựa chọn
-              available: true
-            })
-          );
-          
-          const relatedResults = await Promise.all(relatedPromises);
-          
-          // Merge all products from different categories
-          const allRelated = [];
-          relatedResults.forEach(result => {
-            if (result.items && Array.isArray(result.items)) {
-              allRelated.push(...result.items);
-            }
-          });
-          
-          // Remove duplicates (same product might be in multiple categories)
-          const uniqueRelated = Array.from(
-            new Map(allRelated.map(p => [p._id || p.id, p])).values()
-          );
-          
-          // Filter out current product
-          const filtered = uniqueRelated.filter(p => 
-            (p._id || p.id) !== (productData._id || productData.id)
-          );
-          
-          // Shuffle array for variety
-          const shuffled = [...filtered].sort(() => Math.random() - 0.5);
-          
-          // Take up to 4 related products
-          setRelatedProducts(shuffled.slice(0, 4));
+        if (productData?._id) {
+          recordRecentlyViewedProductId(productData._id);
+        }
+
+        // Fetch related products using AI-powered recommendation API
+        try {
+          const relatedData = await getRelatedProducts(id, 4);
+          if (relatedData.success && relatedData.items) {
+            setRelatedProducts(relatedData.items);
+          }
+        } catch (relatedErr) {
+          console.error('Error fetching related products:', relatedErr);
+          // Fallback to empty array if API fails
+          setRelatedProducts([]);
         }
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -157,7 +135,7 @@ const ShopDetailsPage = () => {
     if (id) {
       fetchProductData();
     }
-  }, [id]);
+  }, [id, t]);
 
   // Fetch reviews when product is loaded
   useEffect(() => {
@@ -204,6 +182,16 @@ const ShopDetailsPage = () => {
     if (product) {
       toggleWishlist(product);
     }
+  };
+
+  /** Mở chat Bookle (Header) với ngữ cảnh đúng cuốn sách đang xem — server nạp mô tả đầy đủ cho Qwen2.5 */
+  const handleAskAIAboutBook = () => {
+    if (!product?._id || !product?.name) return;
+    window.dispatchEvent(
+      new CustomEvent('bookle:open-ai-chat', {
+        detail: { contextProductId: String(product._id), productName: product.name },
+      })
+    );
   };
 
   const handleSubmitReview = async (e) => {
@@ -293,9 +281,9 @@ const ShopDetailsPage = () => {
   }
 
   // Prepare product data with fallbacks
-  const productImages = product.images && product.images.length > 0 
-    ? product.images 
-    : ['/assets/img/book/01.png'];
+  const productImages = product.images && product.images.length > 0
+    ? product.images.map((img) => encodeImageUrl(img))
+    : [PRODUCT_IMAGE_FALLBACK];
   
   const productName = product.name || t('shop.details.title');
   const productPrice = product.price || 0;
@@ -337,12 +325,6 @@ const ShopDetailsPage = () => {
     <>
       {/* Breadcrumb Section */}
       <div className="breadcrumb-wrapper">
-        <div className="book1">
-          <img src="/assets/img/hero/book1.png" alt="book" />
-        </div>
-        <div className="book2">
-          <img src="/assets/img/hero/book2.png" alt="book" />
-        </div>
         <div className="container">
           <div className="page-heading">
             <h1>{t('shop.details.title')}</h1>
@@ -376,7 +358,13 @@ const ShopDetailsPage = () => {
                         className={`tab-pane fade ${activeImage === index ? 'show active' : ''}`}
                       >
                         <div className="shop-details-thumb">
-                          <img src={image} alt={`${productName} ${index + 1}`} />
+                          <div className="shop-details-cover-frame">
+                            <img
+                              className="book-cover-img"
+                              src={image}
+                              alt={`${productName} ${index + 1}`}
+                            />
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -393,7 +381,11 @@ const ShopDetailsPage = () => {
                             setActiveImage(index);
                           }}
                         >
-                          <img src={image} alt={`${productName} thumbnail ${index + 1}`} />
+                          <img
+                            className="shop-details-nav-thumb-img"
+                            src={image}
+                            alt={`${productName} thumbnail ${index + 1}`}
+                          />
                         </a>
                       </li>
                     ))}
@@ -464,13 +456,24 @@ const ShopDetailsPage = () => {
                         </button>
                       </p>
                     </div>
-                    <button
-                      type="button"
-                      className="theme-btn style-2"
-                      onClick={() => setShowReadMoreModal(true)}
-                    >
-                      {t('shop.details.readALittle')}
-                    </button>
+                    <div className="d-flex flex-column gap-2 align-items-stretch">
+                      <button
+                        type="button"
+                        className="theme-btn style-2"
+                        onClick={() => setShowReadMoreModal(true)}
+                      >
+                        {t('shop.details.readALittle')}
+                      </button>
+                      <button
+                        type="button"
+                        className="theme-btn bookle-ai-btn"
+                        onClick={handleAskAIAboutBook}
+                        title={t('shop.details.askAIAboutBook')}
+                      >
+                        <i className="fa-solid fa-robot me-2" aria-hidden="true" />
+                        {t('shop.details.askAIAboutBook')}
+                      </button>
+                    </div>
                     <div className="position-relative" style={{ display: 'inline-block' }}>
                     
                       {showNotification && (
@@ -561,18 +564,6 @@ const ShopDetailsPage = () => {
                         </li>
                       </ul>
                     </div>
-                  </div>
-                  <div className="social-icon">
-                    <h6>{t('shop.details.alsoAvailable')}</h6>
-                    <a href="https://www.customer.io/" target="_blank" rel="noopener noreferrer">
-                      <img src="/assets/img/cutomerio.png" alt="customer.io" />
-                    </a>
-                    <a href="https://www.amazon.com/" target="_blank" rel="noopener noreferrer">
-                      <img src="/assets/img/amazon.png" alt="amazon" />
-                    </a>
-                    <a href="https://www.dropbox.com/" target="_blank" rel="noopener noreferrer">
-                      <img src="/assets/img/dropbox.png" alt="dropbox" />
-                    </a>
                   </div>
                 </div>
               </div>

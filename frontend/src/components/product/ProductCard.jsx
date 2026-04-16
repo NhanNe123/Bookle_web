@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
-import { formatCategoryName } from '../../utils/categoryUtils';
+import { useTranslation } from 'react-i18next';
+import { formatCategoryName, getProductImage } from '../../utils/categoryUtils';
 
 const ProductCard = ({ product }) => {
+  const { t } = useTranslation();
   const { addToCart, isInCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const [showNotification, setShowNotification] = useState(false);
@@ -17,14 +19,30 @@ const ProductCard = ({ product }) => {
     price, 
     compareAtPrice, 
     images = [], 
+    coverImage = '',
     rating = 0, 
     isHot, 
     categories = [],
     stock = 0,
-    isAvailable = true
+    isAvailable = true,
+    language = 'vi'
   } = product;
   
-  const image = images[0] || '/assets/img/book/01.png';
+  // Language display mapping
+  const languageFlags = {
+    'vi': '🇻🇳',
+    'en': '🇬🇧',
+    'zh': '🇨🇳',
+    'ja': '🇯🇵',
+    'ko': '🇰🇷',
+    'fr': '🇫🇷',
+    'de': '🇩🇪',
+    'es': '🇪🇸',
+    'ru': '🇷🇺',
+    'th': '🇹🇭'
+  };
+  
+  const image = getProductImage(images, coverImage);
   const discount = compareAtPrice ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : 0;
 
   const productUrl = `/shop-details/${slug || _id}`;
@@ -38,17 +56,28 @@ const ProductCard = ({ product }) => {
   return (
     <div className="shop-box-items style-2">
       <div className="book-thumb center">
-        <Link to={productUrl}>
-          <img src={image} alt={name} />
+        <Link to={productUrl} className="book-cover-frame-link">
+          <img
+            className="book-cover-img"
+            src={image}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+          />
         </Link>
-        {(isHot || discount > 0) && (
+        {(isHot || discount > 0 || language) && (
           <ul className="post-box">
             {isHot && <li>Hot</li>}
             {discount > 0 && <li>-{discount}%</li>}
+            {language && languageFlags[language] && (
+              <li title={t(`shop.bookLanguages.${language}`) || language} style={{ fontSize: '14px' }}>
+                {languageFlags[language]}
+              </li>
+            )}
           </ul>
         )}
         {!isAvailable && (
-          <div className="out-of-stock-badge">Hết hàng</div>
+          <div className="out-of-stock-badge">{t('shop.outOfStock')}</div>
         )}
         <ul className="shop-icon d-grid justify-content-center align-items-center">
           <li>
@@ -61,7 +90,7 @@ const ProductCard = ({ product }) => {
                 setTimeout(() => setShowWishlistNotification(false), 2000);
               }}
               className={isInWishlist(_id) ? 'text-danger' : ''}
-              title={isInWishlist(_id) ? 'Xóa khỏi yêu thích' : 'Thêm vào yêu thích'}
+              title={isInWishlist(_id) ? t('shop.removeFromWishlist') : t('shop.addToWishlist')}
             >
               <i className={isInWishlist(_id) ? "fas fa-heart" : "far fa-heart"}></i>
             </a>
@@ -85,19 +114,20 @@ const ProductCard = ({ product }) => {
             className="position-absolute top-0 start-50 translate-middle-x mt-n3 alert alert-info py-1 px-2" 
             style={{ zIndex: 1050, fontSize: '0.75rem', whiteSpace: 'nowrap' }}
           >
-            {isInWishlist(_id) ? '💙 Đã thêm vào yêu thích' : '💔 Đã xóa khỏi yêu thích'}
+            {isInWishlist(_id) ? `💙 ${t('shop.addToWishlist')}` : `💔 ${t('shop.removeFromWishlist')}`}
           </div>
         )}
       </div>
       <div className="shop-content">
-        <h5>
-          <Link to={productUrl}>{name}</Link>
-        </h5>
+        <h4 className="book-title product-card-title">
+          <Link to={productUrl} className="product-card-title-link">{name}</Link>
+        </h4>
         {categoryDisplay && (
-          <h3>
-            <Link to="/shop">{categoryDisplay}</Link>
-          </h3>
+          <p className="book-category product-card-category">
+            <Link to="/shop" className="product-card-category-link">{categoryDisplay}</Link>
+          </p>
         )}
+        {author && <p className="product-card-author">{author}</p>}
         <ul className="price-list">
           {compareAtPrice && (
             <li>
@@ -106,26 +136,18 @@ const ProductCard = ({ product }) => {
           )}
           <li>{formatPrice(price)}</li>
         </ul>
-        {author && (
-          <ul className="author-post">
-            <li className="authot-list">
-              <span className="text">Tác giả:</span>
-              <span className="author">{author}</span>
-            </li>
-            <li className="star">
-              {[...Array(5)].map((_, index) => (
-                <i 
-                  key={index} 
-                  className={index < Math.floor(rating) ? "fa-solid fa-star" : "fa-regular fa-star"}
-                ></i>
-              ))}
-            </li>
-          </ul>
-        )}
+        <div className="product-card-rating" aria-label={`${rating}/5`}>
+          {[...Array(5)].map((_, index) => (
+            <i
+              key={index}
+              className={index < Math.floor(rating) ? "fa-solid fa-star" : "fa-regular fa-star"}
+            ></i>
+          ))}
+        </div>
       </div>
       <div className="shop-button">
         <button 
-          className="theme-btn" 
+          className="theme-btn product-card-ghost-btn"
           onClick={(e) => {
             e.preventDefault();
             if (isAvailable && stock > 0) {
@@ -137,14 +159,14 @@ const ProductCard = ({ product }) => {
           disabled={!isAvailable || stock <= 0}
         >
           <i className="fa-solid fa-basket-shopping"></i> 
-          {!isAvailable || stock <= 0 ? 'Hết hàng' : isInCart(_id) ? 'Thêm nữa' : 'Thêm vào giỏ'}
+          {!isAvailable || stock <= 0 ? t('shop.outOfStock') : isInCart(_id) ? t('shop.addMore') : t('shop.addToCart')}
         </button>
         {showNotification && (
           <div 
             className="position-absolute top-0 start-50 translate-middle-x mt-n3 alert alert-success py-2 px-3" 
             style={{ zIndex: 1050, fontSize: '0.875rem', whiteSpace: 'nowrap' }}
           >
-            Đã thêm vào giỏ hàng!
+            {t('shop.addedToCart')}
           </div>
         )}
       </div>

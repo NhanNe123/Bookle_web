@@ -1,0 +1,146 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back"
+  },
+  "profile": {
+    "title": "My Account",
+    "tabs": {
+      "profile": "Profile",
+      "orders": "My Orders"
+    },
+    "editProfile": "Edit Profile",
+    "fullName": "Full Name",
+    "avatar": "Profile Picture",
+    "placeholders": {
+      "fullName": "Enter your full name"
+    },
+    "emailNote": "Email is used for login and cannot be changed.",
+    "avatarNote": "Supports JPG, PNG, GIF, WEBP with max size 2MB.",
+    "cancelAvatar": "Cancel new image",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "noChanges": "No changes to save.",
+    "updateSuccess": "Profile updated successfully.",
+    "updateFailed": "Failed to update profile.",
+    "loginRequired": "Please login",
+    "loginRequiredDesc": "You need to login to view and edit your account information.",
+    "backToHome": "Back to Home"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "cart": "Cart",
+    "shippingInfo": "Shipping Information",
+    "fullName": "Full Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "address": "Address",
+    "ward": "Ward",
+    "district": "District",
+    "city": "City/Province",
+    "notes": "Order Notes",
+    "placeholders": {
+      "fullName": "Enter your full name",
+      "phone": "Enter phone number",
+      "email": "Enter email address",
+      "address": "Street address",
+      "ward": "Select ward",
+      "district": "Select district",
+      "city": "Select city/province",
+      "notes": "Notes about your order (optional)"
+    },
+    "paymentMethod": "Payment Method",
+    "payment": {
+      "cod": "Cash on Delivery (COD)",
+      "codDesc": "Pay cash when receiving the order",
+      "bankTransfer": "Bank Transfer",
+      "bankTransferDesc": "Transfer to our bank account",
+      "momo": "MoMo Wallet",
+      "momoDesc": "Pay via MoMo e-wallet",
+      "vnpay": "VNPay",
+      "vnpayDesc": "Pay via VNPay gateway",
+      "zalopay": "ZaloPay",
+      "zalopayDesc": "Pay via ZaloPay wallet"
+    },
+    "orderSummary": "Your Order",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "freeShipping": "Free",
+    "freeShippingNote": "Add {{amount}} more for free shipping",
+    "discount": "Discount",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "securePayment": "Secure & Safe Payment",
+    "errors": {
+      "fullNameRequired": "Please enter your full name",
+      "phoneRequired": "Please enter phone number",
+      "phoneInvalid": "Invalid phone number",
+      "emailRequired": "Please enter email",
+      "emailInvalid": "Invalid email address",
+      "addressRequired": "Please enter address",
+      "districtRequired": "Please enter district",
+      "cityRequired": "Please enter city/province",
+      "orderFailed": "Order failed. Please try again."
+    },
+    "success": {
+      "title": "Order Successful",
+      "thankYou": "Thank you for your order!",
+      "orderPlaced": "Your order has been received and is being processed.",
+      "orderNumber": "Order Number",
+      "total": "Total Amount",
+      "codMessage": "You will pay when receiving the order. Please prepare the exact amount.",
+      "bankTransferMessage": "Please transfer to the account below to complete your order.",
+      "viewOrders": "View Orders",
+      "continueShopping": "Continue Shopping"
+    }
+  },
+  "orders": {
+    "title": "My Orders",
+    "empty": "You don't have any orders yet",
+    "emptyDesc": "Explore our products and place your order!",
+    "shopNow": "Shop Now",
+    "orderNumber": "Order Number",
+    "date": "Order Date",
+    "status": "Status",
+    "total": "Total",
+    "items": "Items",
+    "viewDetails": "View Details",
+    "cancel": "Cancel Order",
+    "cancelConfirm": "Are you sure you want to cancel this order?",
+    "cancelReason": "Cancel Reason",
+    "cancelReasonPlaceholder": "Enter cancel reason (optional)",
+    "confirmCancel": "Confirm Cancel",
+    "cancelSuccess": "Order cancelled successfully",
+    "error": "Failed to load orders",
+    "cancelError": "Failed to cancel order",
+    "statusLabels": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "processing": "Processing",
+      "shipping": "Shipping",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "paymentStatus": {
+      "pending": "Unpaid",
+      "paid": "Paid",
+      "failed": "Payment Failed",
+      "refunded": "Refunded"
+    },
+    "filter": {
+      "all": "All",
+      "pending": "Pending",
+      "processing": "Processing",
+      "shipping": "Shipping",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    }
+  }
+}

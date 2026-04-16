@@ -1,0 +1,146 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "back": "Quay lại"
+  },
+  "profile": {
+    "title": "Thông tin tài khoản",
+    "tabs": {
+      "profile": "Thông tin cá nhân",
+      "orders": "Đơn hàng của tôi"
+    },
+    "editProfile": "Chỉnh sửa thông tin",
+    "fullName": "Họ và tên",
+    "avatar": "Ảnh đại diện",
+    "placeholders": {
+      "fullName": "Nhập họ và tên"
+    },
+    "emailNote": "Email được dùng để đăng nhập và không thể thay đổi.",
+    "avatarNote": "Hỗ trợ JPG, PNG, GIF, WEBP với kích thước tối đa 2MB.",
+    "cancelAvatar": "Hủy ảnh mới",
+    "saveChanges": "Lưu thay đổi",
+    "saving": "Đang lưu...",
+    "noChanges": "Bạn chưa thay đổi thông tin nào.",
+    "updateSuccess": "Cập nhật thông tin thành công.",
+    "updateFailed": "Cập nhật thông tin thất bại.",
+    "loginRequired": "Vui lòng đăng nhập",
+    "loginRequiredDesc": "Bạn cần đăng nhập để xem và chỉnh sửa thông tin tài khoản của mình.",
+    "backToHome": "Về trang chủ"
+  },
+  "checkout": {
+    "title": "Thanh toán",
+    "cart": "Giỏ hàng",
+    "shippingInfo": "Thông tin giao hàng",
+    "fullName": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "address": "Địa chỉ",
+    "ward": "Phường/Xã",
+    "district": "Quận/Huyện",
+    "city": "Tỉnh/Thành phố",
+    "notes": "Ghi chú đơn hàng",
+    "placeholders": {
+      "fullName": "Nhập họ và tên",
+      "phone": "Nhập số điện thoại",
+      "email": "Nhập email",
+      "address": "Số nhà, tên đường",
+      "ward": "Chọn phường/xã",
+      "district": "Chọn quận/huyện",
+      "city": "Chọn tỉnh/thành phố",
+      "notes": "Ghi chú về đơn hàng (tùy chọn)"
+    },
+    "paymentMethod": "Phương thức thanh toán",
+    "payment": {
+      "cod": "Thanh toán khi nhận hàng (COD)",
+      "codDesc": "Thanh toán tiền mặt khi nhận hàng",
+      "bankTransfer": "Chuyển khoản ngân hàng",
+      "bankTransferDesc": "Chuyển khoản qua tài khoản ngân hàng",
+      "momo": "Ví MoMo",
+      "momoDesc": "Thanh toán qua ví điện tử MoMo",
+      "vnpay": "VNPay",
+      "vnpayDesc": "Thanh toán qua cổng VNPay",
+      "zalopay": "ZaloPay",
+      "zalopayDesc": "Thanh toán qua ví ZaloPay"
+    },
+    "orderSummary": "Đơn hàng của bạn",
+    "subtotal": "Tạm tính",
+    "shipping": "Phí vận chuyển",
+    "freeShipping": "Miễn phí",
+    "freeShippingNote": "Mua thêm {{amount}} để được miễn phí vận chuyển",
+    "discount": "Giảm giá",
+    "total": "Tổng cộng",
+    "placeOrder": "Đặt hàng",
+    "processing": "Đang xử lý...",
+    "securePayment": "Thanh toán an toàn & bảo mật",
+    "errors": {
+      "fullNameRequired": "Vui lòng nhập họ và tên",
+      "phoneRequired": "Vui lòng nhập số điện thoại",
+      "phoneInvalid": "Số điện thoại không hợp lệ",
+      "emailRequired": "Vui lòng nhập email",
+      "emailInvalid": "Email không hợp lệ",
+      "addressRequired": "Vui lòng nhập địa chỉ",
+      "districtRequired": "Vui lòng nhập quận/huyện",
+      "cityRequired": "Vui lòng nhập tỉnh/thành phố",
+      "orderFailed": "Đặt hàng thất bại. Vui lòng thử lại."
+    },
+    "success": {
+      "title": "Đặt hàng thành công",
+      "thankYou": "Cảm ơn bạn đã đặt hàng!",
+      "orderPlaced": "Đơn hàng của bạn đã được tiếp nhận và đang được xử lý.",
+      "orderNumber": "Mã đơn hàng",
+      "total": "Tổng tiền",
+      "codMessage": "Bạn sẽ thanh toán khi nhận được hàng. Vui lòng chuẩn bị số tiền chính xác.",
+      "bankTransferMessage": "Vui lòng chuyển khoản theo thông tin bên dưới để hoàn tất đơn hàng.",
+      "viewOrders": "Xem đơn hàng",
+      "continueShopping": "Tiếp tục mua sắm"
+    }
+  },
+  "orders": {
+    "title": "Đơn hàng của tôi",
+    "empty": "Bạn chưa có đơn hàng nào",
+    "emptyDesc": "Hãy khám phá các sản phẩm và đặt hàng ngay!",
+    "shopNow": "Mua sắm ngay",
+    "orderNumber": "Mã đơn hàng",
+    "date": "Ngày đặt",
+    "status": "Trạng thái",
+    "total": "Tổng tiền",
+    "items": "Sản phẩm",
+    "viewDetails": "Xem chi tiết",
+    "cancel": "Hủy đơn",
+    "cancelConfirm": "Bạn có chắc muốn hủy đơn hàng này?",
+    "cancelReason": "Lý do hủy",
+    "cancelReasonPlaceholder": "Nhập lý do hủy đơn hàng (tùy chọn)",
+    "confirmCancel": "Xác nhận hủy",
+    "cancelSuccess": "Đã hủy đơn hàng thành công",
+    "error": "Không thể tải đơn hàng",
+    "cancelError": "Không thể hủy đơn hàng",
+    "statusLabels": {
+      "pending": "Chờ xác nhận",
+      "confirmed": "Đã xác nhận",
+      "processing": "Đang chuẩn bị",
+      "shipping": "Đang giao hàng",
+      "delivered": "Đã giao hàng",
+      "cancelled": "Đã hủy",
+      "refunded": "Đã hoàn tiền"
+    },
+    "paymentStatus": {
+      "pending": "Chưa thanh toán",
+      "paid": "Đã thanh toán",
+      "failed": "Thanh toán thất bại",
+      "refunded": "Đã hoàn tiền"
+    },
+    "filter": {
+      "all": "Tất cả",
+      "pending": "Chờ xác nhận",
+      "processing": "Đang xử lý",
+      "shipping": "Đang giao",
+      "delivered": "Đã giao",
+      "cancelled": "Đã hủy"
+    }
+  }
+}

@@ -62,19 +62,11 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/contact - Lấy danh sách tin nhắn (Admin only - optional)
-router.get('/', async (req, res) => {
+// GET /api/contact - Lấy danh sách tin nhắn (Admin)
+import { loadUser, requireAdmin } from '../middleware/adminAuth.js';
+
+router.get('/', loadUser, requireAdmin, async (req, res) => {
   try {
-    // Check if user is admin (optional feature)
-    if (!req.session.userId) {
-      return res.status(401).json({
-        success: false,
-        error: 'Chưa đăng nhập'
-      });
-    }
-
-   
-
     const { page = 1, limit = 20, status } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
@@ -107,6 +99,35 @@ router.get('/', async (req, res) => {
       success: false,
       error: 'Lỗi lấy danh sách tin nhắn'
     });
+  }
+});
+
+// PATCH /api/contact/:id/status — đánh dấu đã đọc / đã phản hồi
+router.patch('/:id/status', loadUser, requireAdmin, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const allowed = ['new', 'read', 'replied', 'archived'];
+    if (!status || !allowed.includes(status)) {
+      return res.status(400).json({ success: false, error: 'Trạng thái không hợp lệ' });
+    }
+    const doc = await Contact.findByIdAndUpdate(req.params.id, { status }, { new: true });
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy' });
+    res.json({ success: true, contact: doc.toObject() });
+  } catch (e) {
+    console.error('PATCH /api/contact/:id/status error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi cập nhật' });
+  }
+});
+
+// DELETE /api/contact/:id
+router.delete('/:id', loadUser, requireAdmin, async (req, res) => {
+  try {
+    const doc = await Contact.findByIdAndDelete(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy' });
+    res.json({ success: true, message: 'Đã xóa tin nhắn' });
+  } catch (e) {
+    console.error('DELETE /api/contact/:id error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi xóa' });
   }
 });
 

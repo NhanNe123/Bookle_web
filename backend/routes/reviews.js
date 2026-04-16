@@ -265,4 +265,67 @@ async function updateProductRating(productId) {
   }
 }
 
+// ══════════════════════════════════════
+// ADMIN endpoints
+// ══════════════════════════════════════
+import { loadUser, requireAdmin } from '../middleware/adminAuth.js';
+
+// GET /api/reviews/admin/list
+router.get('/reviews/admin/list', loadUser, requireAdmin, async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const skip = (page - 1) * limit;
+    const filter = {};
+    if (req.query.approved === 'true') filter.isApproved = true;
+    if (req.query.approved === 'false') filter.isApproved = false;
+
+    const [reviews, total] = await Promise.all([
+      Review.find(filter)
+        .populate('product', 'name slug')
+        .populate('user', 'name email')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Review.countDocuments(filter),
+    ]);
+
+    res.json({ success: true, reviews, total, page, pages: Math.ceil(total / limit) });
+  } catch (e) {
+    console.error('GET /api/reviews/admin/list error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi tải đánh giá' });
+  }
+});
+
+// PATCH /api/reviews/:id/approve — Ẩn/Hiện review
+router.patch('/reviews/:id/approve', loadUser, requireAdmin, async (req, res) => {
+  try {
+    const doc = await Review.findById(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy đánh giá' });
+
+    doc.isApproved = req.body.isApproved !== undefined ? Boolean(req.body.isApproved) : !doc.isApproved;
+    await doc.save();
+    await updateProductRating(doc.product);
+
+    res.json({ success: true, message: doc.isApproved ? 'Đã hiện đánh giá' : 'Đã ẩn đánh giá', review: doc.toObject() });
+  } catch (e) {
+    console.error('PATCH /api/reviews/:id/approve error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi cập nhật' });
+  }
+});
+
+// DELETE /api/reviews/:id
+router.delete('/reviews/:id', loadUser, requireAdmin, async (req, res) => {
+  try {
+    const doc = await Review.findByIdAndDelete(req.params.id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy đánh giá' });
+    await updateProductRating(doc.product);
+    res.json({ success: true, message: 'Đã xóa đánh giá' });
+  } catch (e) {
+    console.error('DELETE /api/reviews/:id error:', e);
+    res.status(500).json({ success: false, error: 'Lỗi xóa đánh giá' });
+  }
+});
+
 export default router;

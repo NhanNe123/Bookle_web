@@ -9,6 +9,8 @@ const CursorFollower = () => {
     let mouseY = 0;
     let cursorX = 0;
     let cursorY = 0;
+    let rafId = null;
+    let isDestroyed = false;
 
     const handleMouseMove = (e) => {
       mouseX = e.clientX;
@@ -16,6 +18,7 @@ const CursorFollower = () => {
     };
 
     const animateCursor = () => {
+      if (isDestroyed) return;
       const diffX = mouseX - cursorX;
       const diffY = mouseY - cursorY;
 
@@ -23,10 +26,10 @@ const CursorFollower = () => {
       cursorY += diffY * 0.1;
 
       if (cursor) {
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
+        cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
       }
 
-      requestAnimationFrame(animateCursor);
+      rafId = requestAnimationFrame(animateCursor);
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -48,7 +51,9 @@ const CursorFollower = () => {
     });
 
     return () => {
+      isDestroyed = true;
       window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
       interactiveElements.forEach(el => {
         el.removeEventListener('mouseenter', handleMouseEnter);
         el.removeEventListener('mouseleave', handleMouseLeave);
@@ -56,7 +61,11 @@ const CursorFollower = () => {
     };
   }, []);
 
-  return <div className="cursor-follower" ref={cursorRef}></div>;
+  return (
+    <div className="cursor-follower" ref={cursorRef} aria-hidden="true">
+      <div className="cursor-follower__dot"></div>
+    </div>
+  );
 };
 
 export default CursorFollower;
