@@ -43,6 +43,8 @@ const OrderManagement = lazy(() => import('./admin/pages/OrderManagement'));
 const ReviewManagement = lazy(() => import('./admin/pages/ReviewManagement'));
 const UserManagement = lazy(() => import('./admin/pages/UserManagement'));
 const ContactManagement = lazy(() => import('./admin/pages/ContactManagement'));
+const PostManagement = lazy(() => import('./admin/pages/PostManagement'));
+const AuthorManagement = lazy(() => import('./admin/pages/AuthorManagement'));
 
 // Component gộp các Provider lại cho gọn App.js
 const AppProviders = ({ children }) => (
@@ -103,6 +105,8 @@ function App() {
                   <Route path="orders" element={<OrderManagement />} />
                   <Route path="reviews" element={<ReviewManagement />} />
                   <Route path="users" element={<UserManagement />} />
+                  <Route path="posts" element={<PostManagement />} />
+                  <Route path="authors" element={<AuthorManagement />} />
                   <Route path="contacts" element={<ContactManagement />} />
                 </Route>
               </Route>

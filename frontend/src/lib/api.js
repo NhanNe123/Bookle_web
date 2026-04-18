@@ -133,6 +133,26 @@ export const getAuthorProducts = async (authorId, params = {}) => {
   return response.data;
 };
 
+// Admin Authors CRUD
+export const adminAuthorsAPI = {
+  list: async (params = {}) => {
+    const response = await api.get('/authors/admin/list', { params });
+    return response.data;
+  },
+  create: async (payload) => {
+    const response = await api.post('/authors', payload);
+    return response.data;
+  },
+  update: async (id, payload) => {
+    const response = await api.put(`/authors/${id}`, payload);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await api.delete(`/authors/${id}`);
+    return response.data;
+  },
+};
+
 // Posts API
 export const getPosts = async (params = {}) => {
   const response = await api.get('/posts', { params });
@@ -147,6 +167,26 @@ export const getPostById = async (id) => {
 export const getPostBySlug = async (slug) => {
   const response = await api.get(`/posts/slug/${slug}`);
   return response.data;
+};
+
+// Admin Posts CRUD
+export const adminPostsAPI = {
+  list: async (params = {}) => {
+    const response = await api.get('/posts/admin/list', { params });
+    return response.data;
+  },
+  create: async (payload) => {
+    const response = await api.post('/posts', payload);
+    return response.data;
+  },
+  update: async (id, payload) => {
+    const response = await api.put(`/posts/${id}`, payload);
+    return response.data;
+  },
+  delete: async (id) => {
+    const response = await api.delete(`/posts/${id}`);
+    return response.data;
+  },
 };
 
 // Reviews API
@@ -240,6 +280,14 @@ export const eventsAPI = {
       throw new Error('Thiếu ID sự kiện');
     }
     const response = await api.post(`/events/${encodeURIComponent(rid)}/delete`);
+    return response.data;
+  },
+};
+
+// Admin dashboard stats
+export const adminDashboardAPI = {
+  getStats: async () => {
+    const response = await api.get('/admin/stats');
     return response.data;
   },
 };

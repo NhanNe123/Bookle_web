@@ -2,8 +2,151 @@
 import express from 'express';
 import Author from '../models/Author.js';
 import Product from '../models/Product.js';
+import { loadUser, requireAdmin } from '../middleware/adminAuth.js';
 
 const router = express.Router();
+
+// Admin auth middleware
+router.use(loadUser);
+
+// GET /api/authors/admin/list - Danh sách tác giả cho trang admin
+router.get('/admin/list', requireAdmin, async (req, res) => {
+  try {
+    const page = Math.max(parseInt(req.query.page) || 1, 1);
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const skip = (page - 1) * limit;
+    const { q, isActive } = req.query;
+
+    const filter = {};
+    if (isActive !== undefined && isActive !== '') {
+      filter.isActive = String(isActive) === 'true';
+    }
+    if (q) {
+      const re = new RegExp(String(q), 'i');
+      filter.$or = [{ name: re }, { slug: re }, { title: re }];
+    }
+
+    const [items, total] = await Promise.all([
+      Author.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+      Author.countDocuments(filter),
+    ]);
+
+    res.json({
+      success: true,
+      items,
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error('Admin list authors error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi tải danh sách tác giả' });
+  }
+});
+
+// POST /api/authors - Tạo tác giả (admin)
+router.post('/', requireAdmin, async (req, res) => {
+  try {
+    const {
+      name,
+      slug,
+      bio,
+      title,
+      avatar,
+      images,
+      social,
+      awards,
+      isActive,
+    } = req.body;
+
+    if (!name || !String(name).trim()) {
+      return res.status(400).json({ success: false, error: 'Tên tác giả là bắt buộc' });
+    }
+
+    const doc = await Author.create({
+      name: String(name).trim(),
+      slug: slug ? String(slug).trim().toLowerCase() : undefined,
+      bio: bio || '',
+      title: title || '',
+      avatar: avatar || '',
+      images: Array.isArray(images) ? images : [],
+      social: social && typeof social === 'object' ? social : undefined,
+      awards: Array.isArray(awards) ? awards : [],
+      isActive: isActive !== false,
+    });
+
+    res.status(201).json({ success: true, item: doc.toObject() });
+  } catch (error) {
+    console.error('Create author error:', error);
+    if (error.name === 'ValidationError') {
+      const msgs = Object.values(error.errors || {}).map((x) => x.message);
+      return res.status(400).json({ success: false, error: msgs.join('; ') });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, error: 'Slug đã tồn tại' });
+    }
+    res.status(500).json({ success: false, error: 'Lỗi tạo tác giả' });
+  }
+});
+
+// PUT /api/authors/:id - Cập nhật tác giả (admin)
+router.put('/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ success: false, error: 'ID không hợp lệ' });
+    }
+
+    const doc = await Author.findById(id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy tác giả' });
+
+    const allowed = [
+      'name', 'slug', 'bio', 'title', 'avatar', 'images',
+      'social', 'awards', 'isActive',
+    ];
+
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) {
+        doc[key] = req.body[key];
+      }
+    }
+
+    if (typeof doc.slug === 'string') {
+      doc.slug = doc.slug.trim().toLowerCase();
+    }
+
+    await doc.save();
+    res.json({ success: true, item: doc.toObject() });
+  } catch (error) {
+    console.error('Update author error:', error);
+    if (error.name === 'ValidationError') {
+      const msgs = Object.values(error.errors || {}).map((x) => x.message);
+      return res.status(400).json({ success: false, error: msgs.join('; ') });
+    }
+    if (error.code === 11000) {
+      return res.status(400).json({ success: false, error: 'Slug đã tồn tại' });
+    }
+    res.status(500).json({ success: false, error: 'Lỗi cập nhật tác giả' });
+  }
+});
+
+// DELETE /api/authors/:id - Xóa tác giả (admin)
+router.delete('/:id', requireAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ success: false, error: 'ID không hợp lệ' });
+    }
+
+    const doc = await Author.findByIdAndDelete(id);
+    if (!doc) return res.status(404).json({ success: false, error: 'Không tìm thấy tác giả' });
+
+    res.json({ success: true, message: 'Đã xóa tác giả' });
+  } catch (error) {
+    console.error('Delete author error:', error);
+    res.status(500).json({ success: false, error: 'Lỗi xóa tác giả' });
+  }
+});
 
 // GET /api/authors - Lấy danh sách tác giả
 router.get('/', async (req, res) => {

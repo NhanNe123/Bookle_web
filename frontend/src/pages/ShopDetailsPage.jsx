@@ -420,7 +420,7 @@ const ShopDetailsPage = () => {
                       </div>
                     )}
                   </div>
-                  <div className="cart-wrapper position-relative">
+                  <div className="cart-wrapper position-relative shop-details-action-row">
                     <div className="quantity-basket">
                       <p className="qty">
                         <button
@@ -456,17 +456,18 @@ const ShopDetailsPage = () => {
                         </button>
                       </p>
                     </div>
-                    <div className="d-flex flex-column gap-2 align-items-stretch">
+                    <div className="d-flex flex-column gap-2 align-items-stretch shop-details-secondary-actions">
                       <button
                         type="button"
-                        className="theme-btn style-2"
+                        className="theme-btn style-2 shop-details-preview-btn"
                         onClick={() => setShowReadMoreModal(true)}
                       >
+                        <i className="fa-regular fa-file-lines me-2" aria-hidden="true" />
                         {t('shop.details.readALittle')}
                       </button>
                       <button
                         type="button"
-                        className="theme-btn bookle-ai-btn"
+                        className="theme-btn bookle-ai-btn shop-details-ai-btn"
                         onClick={handleAskAIAboutBook}
                         title={t('shop.details.askAIAboutBook')}
                       >
@@ -489,7 +490,7 @@ const ShopDetailsPage = () => {
                       {/* // --- THAY ĐỔI KẾT THÚC --- */}
 
                       <button
-                        className="theme-btn"
+                        className="theme-btn shop-details-cart-btn"
                         onClick={handleAddToCart}
                         disabled={!productAvailability}
                       >

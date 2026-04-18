@@ -7,6 +7,8 @@ import { ordersAPI } from '../lib/api';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { getProductImage } from '../utils/categoryUtils';
 
+const VIETNAM_ADMIN_API_BASE = 'https://provinces.open-api.vn/api';
+
 const CheckoutPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -32,6 +34,17 @@ const CheckoutPage = () => {
   });
   
   const [formErrors, setFormErrors] = useState({});
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedProvinceCode, setSelectedProvinceCode] = useState('');
+  const [selectedDistrictCode, setSelectedDistrictCode] = useState('');
+  const [locationLoading, setLocationLoading] = useState({
+    provinces: false,
+    districts: false,
+    wards: false,
+  });
+  const [locationApiError, setLocationApiError] = useState('');
 
   // Pre-fill user data
   useEffect(() => {
@@ -51,6 +64,41 @@ const CheckoutPage = () => {
       navigate('/shop-cart');
     }
   }, [cart, navigate, orderSuccess]);
+
+  // Load provinces/cities from Vietnam administrative API
+  useEffect(() => {
+    let mounted = true;
+    const controller = new AbortController();
+
+    const loadProvinces = async () => {
+      try {
+        setLocationLoading((prev) => ({ ...prev, provinces: true }));
+        const res = await fetch(`${VIETNAM_ADMIN_API_BASE}/?depth=1`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (!mounted) return;
+        setProvinces(Array.isArray(data) ? data : []);
+        setLocationApiError('');
+      } catch (err) {
+        if (err?.name === 'AbortError') return;
+        console.error('Load provinces failed:', err);
+        if (!mounted) return;
+        setLocationApiError('Không tải được danh sách tỉnh/thành. Bạn vẫn có thể nhập tay.');
+      } finally {
+        if (mounted) {
+          setLocationLoading((prev) => ({ ...prev, provinces: false }));
+        }
+      }
+    };
+
+    loadProvinces();
+    return () => {
+      mounted = false;
+      controller.abort();
+    };
+  }, []);
 
   // Format price
   const formatPrice = (price) => {
@@ -87,6 +135,75 @@ const CheckoutPage = () => {
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: null }));
     }
+  };
+
+  const handleProvinceSelect = async (e) => {
+    const code = e.target.value;
+    setSelectedProvinceCode(code);
+    setSelectedDistrictCode('');
+    setDistricts([]);
+    setWards([]);
+
+    const province = provinces.find((p) => String(p.code) === String(code));
+    setFormData((prev) => ({
+      ...prev,
+      city: province?.name || '',
+      district: '',
+      ward: '',
+    }));
+    setFormErrors((prev) => ({ ...prev, city: null, district: null }));
+
+    if (!code) return;
+
+    try {
+      setLocationLoading((prev) => ({ ...prev, districts: true }));
+      const res = await fetch(`${VIETNAM_ADMIN_API_BASE}/p/${code}?depth=2`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setDistricts(Array.isArray(data?.districts) ? data.districts : []);
+      setLocationApiError('');
+    } catch (err) {
+      console.error('Load districts failed:', err);
+      setLocationApiError('Không tải được quận/huyện. Bạn có thể nhập tay.');
+    } finally {
+      setLocationLoading((prev) => ({ ...prev, districts: false }));
+    }
+  };
+
+  const handleDistrictSelect = async (e) => {
+    const code = e.target.value;
+    setSelectedDistrictCode(code);
+    setWards([]);
+
+    const district = districts.find((d) => String(d.code) === String(code));
+    setFormData((prev) => ({
+      ...prev,
+      district: district?.name || '',
+      ward: '',
+    }));
+    setFormErrors((prev) => ({ ...prev, district: null }));
+
+    if (!code) return;
+
+    try {
+      setLocationLoading((prev) => ({ ...prev, wards: true }));
+      const res = await fetch(`${VIETNAM_ADMIN_API_BASE}/d/${code}?depth=2`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setWards(Array.isArray(data?.wards) ? data.wards : []);
+      setLocationApiError('');
+    } catch (err) {
+      console.error('Load wards failed:', err);
+      setLocationApiError('Không tải được phường/xã. Bạn có thể nhập tay.');
+    } finally {
+      setLocationLoading((prev) => ({ ...prev, wards: false }));
+    }
+  };
+
+  const handleWardSelect = (e) => {
+    const code = e.target.value;
+    const ward = wards.find((w) => String(w.code) === String(code));
+    setFormData((prev) => ({ ...prev, ward: ward?.name || '' }));
   };
 
   // Validate form
@@ -304,6 +421,12 @@ const CheckoutPage = () => {
                     </h5>
                   </div>
                   <div className="card-body p-4">
+                    {locationApiError && (
+                      <div className="alert alert-warning py-2" role="alert">
+                        <i className="fa-solid fa-triangle-exclamation me-2"></i>
+                        {locationApiError}
+                      </div>
+                    )}
                     <div className="row g-3">
                       <div className="col-md-6">
                         <label className="form-label">{t('checkout.fullName')} *</label>
@@ -365,47 +488,110 @@ const CheckoutPage = () => {
                         )}
                       </div>
                       
-                      <div className="col-md-4">
-                        <label className="form-label">{t('checkout.ward')}</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          name="ward"
-                          value={formData.ward}
-                          onChange={handleChange}
-                          placeholder={t('checkout.placeholders.ward')}
-                        />
-                      </div>
-                      
-                      <div className="col-md-4">
-                        <label className="form-label">{t('checkout.district')} *</label>
-                        <input
-                          type="text"
-                          className={`form-control ${formErrors.district ? 'is-invalid' : ''}`}
-                          name="district"
-                          value={formData.district}
-                          onChange={handleChange}
-                          placeholder={t('checkout.placeholders.district')}
-                        />
-                        {formErrors.district && (
-                          <div className="invalid-feedback">{formErrors.district}</div>
-                        )}
-                      </div>
-                      
-                      <div className="col-md-4">
-                        <label className="form-label">{t('checkout.city')} *</label>
-                        <input
-                          type="text"
-                          className={`form-control ${formErrors.city ? 'is-invalid' : ''}`}
-                          name="city"
-                          value={formData.city}
-                          onChange={handleChange}
-                          placeholder={t('checkout.placeholders.city')}
-                        />
-                        {formErrors.city && (
-                          <div className="invalid-feedback">{formErrors.city}</div>
-                        )}
-                      </div>
+                      {provinces.length > 0 ? (
+                        <>
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.city')} *</label>
+                            <select
+                              className={`form-select ${formErrors.city ? 'is-invalid' : ''}`}
+                              value={selectedProvinceCode}
+                              onChange={handleProvinceSelect}
+                              disabled={locationLoading.provinces}
+                            >
+                              <option value="">{t('checkout.placeholders.city')}</option>
+                              {provinces.map((province) => (
+                                <option key={province.code} value={province.code}>
+                                  {province.name}
+                                </option>
+                              ))}
+                            </select>
+                            {formErrors.city && (
+                              <div className="invalid-feedback">{formErrors.city}</div>
+                            )}
+                          </div>
+
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.district')} *</label>
+                            <select
+                              className={`form-select ${formErrors.district ? 'is-invalid' : ''}`}
+                              value={selectedDistrictCode}
+                              onChange={handleDistrictSelect}
+                              disabled={!selectedProvinceCode || locationLoading.districts}
+                            >
+                              <option value="">{t('checkout.placeholders.district')}</option>
+                              {districts.map((district) => (
+                                <option key={district.code} value={district.code}>
+                                  {district.name}
+                                </option>
+                              ))}
+                            </select>
+                            {formErrors.district && (
+                              <div className="invalid-feedback">{formErrors.district}</div>
+                            )}
+                          </div>
+
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.ward')}</label>
+                            <select
+                              className="form-select"
+                              value={wards.find((w) => w.name === formData.ward)?.code || ''}
+                              onChange={handleWardSelect}
+                              disabled={!selectedDistrictCode || locationLoading.wards}
+                            >
+                              <option value="">{t('checkout.placeholders.ward')}</option>
+                              {wards.map((ward) => (
+                                <option key={ward.code} value={ward.code}>
+                                  {ward.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.ward')}</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="ward"
+                              value={formData.ward}
+                              onChange={handleChange}
+                              placeholder={t('checkout.placeholders.ward')}
+                            />
+                          </div>
+
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.district')} *</label>
+                            <input
+                              type="text"
+                              className={`form-control ${formErrors.district ? 'is-invalid' : ''}`}
+                              name="district"
+                              value={formData.district}
+                              onChange={handleChange}
+                              placeholder={t('checkout.placeholders.district')}
+                            />
+                            {formErrors.district && (
+                              <div className="invalid-feedback">{formErrors.district}</div>
+                            )}
+                          </div>
+
+                          <div className="col-md-4">
+                            <label className="form-label">{t('checkout.city')} *</label>
+                            <input
+                              type="text"
+                              className={`form-control ${formErrors.city ? 'is-invalid' : ''}`}
+                              name="city"
+                              value={formData.city}
+                              onChange={handleChange}
+                              placeholder={t('checkout.placeholders.city')}
+                            />
+                            {formErrors.city && (
+                              <div className="invalid-feedback">{formErrors.city}</div>
+                            )}
+                          </div>
+                        </>
+                      )}
                       
                       <div className="col-12">
                         <label className="form-label">{t('checkout.notes')}</label>

@@ -20,6 +20,7 @@ import ordersRouter from './backend/routes/orders.js';
 import eventsRouter from './backend/routes/events.js';
 import uploadRouter from './backend/routes/upload.js';
 import passport from './backend/config/passport.js';
+import { loadUser, requireAdmin } from './backend/middleware/adminAuth.js';
 import { initAI } from './backend/services/aiInit.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -157,21 +158,64 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 // Dashboard stats API (for React Admin dashboard)
-app.get('/api/admin/stats', async (req, res) => {
+app.get('/api/admin/stats', loadUser, requireAdmin, async (req, res) => {
   try {
     const mongoose = (await import('mongoose')).default;
     const db = mongoose.connection.db;
-    const [products, users, orders, contacts, reviews, posts] = await Promise.all([
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+    const [products, users, orders, contacts, reviews, posts, revenueAgg, revenueMonthAgg] = await Promise.all([
       db.collection('products').countDocuments(),
       db.collection('users').countDocuments(),
       db.collection('orders').countDocuments(),
       db.collection('contacts').countDocuments(),
       db.collection('reviews').countDocuments(),
       db.collection('posts').countDocuments(),
+      db.collection('orders').aggregate([
+        {
+          $match: {
+            status: { $in: ['delivered', 'shipping', 'processing', 'confirmed'] },
+          },
+        },
+        { $group: { _id: null, revenue: { $sum: { $ifNull: ['$total', 0] } } } },
+      ]).toArray(),
+      db.collection('orders').aggregate([
+        {
+          $match: {
+            createdAt: { $gte: monthStart, $lt: nextMonthStart },
+            status: { $in: ['delivered', 'shipping', 'processing', 'confirmed'] },
+          },
+        },
+        { $group: { _id: null, revenue: { $sum: { $ifNull: ['$total', 0] } } } },
+      ]).toArray(),
     ]);
-    res.json({ products, users, orders, contacts, reviews, posts });
+
+    const revenue = Number(revenueAgg?.[0]?.revenue || 0);
+    const revenueThisMonth = Number(revenueMonthAgg?.[0]?.revenue || 0);
+
+    res.json({
+      products,
+      users,
+      orders,
+      contacts,
+      reviews,
+      posts,
+      revenue,
+      revenueThisMonth,
+    });
   } catch {
-    res.json({ products: 0, users: 0, orders: 0, contacts: 0, reviews: 0, posts: 0 });
+    res.json({
+      products: 0,
+      users: 0,
+      orders: 0,
+      contacts: 0,
+      reviews: 0,
+      posts: 0,
+      revenue: 0,
+      revenueThisMonth: 0,
+    });
   }
 });
 
@@ -278,7 +322,14 @@ app.use((err, req, res, next) => {
 (async () => {
   try {
     await connectDB();
-    await initAI();
+    try {
+      await initAI();
+    } catch (aiErr) {
+      // Không chặn toàn bộ server nếu Ollama chưa chạy.
+      // Các endpoint AI đã có fallback riêng; phần còn lại của hệ thống vẫn hoạt động.
+      console.warn('⚠️ AI init skipped:', aiErr?.message || aiErr);
+      console.warn('⚠️ Server vẫn khởi động, nhưng tính năng AI có thể bị giới hạn.');
+    }
 
     const PORT = process.env.PORT || 3000;
 

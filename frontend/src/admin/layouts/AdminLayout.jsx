@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Menu, Button, theme, Avatar, Dropdown, Space, Typography, Divider } from 'antd';
+import { Layout, Menu, Button, theme, Avatar, Dropdown, Space, Typography, Divider, Tag } from 'antd';
 import {
   DashboardOutlined,
   BookOutlined,
@@ -14,8 +14,11 @@ import {
   UserOutlined,
   TeamOutlined,
   HomeOutlined,
+  FileTextOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 import { ADMIN_TOKEN_KEY, ADMIN_USER_KEY } from '../pages/Login';
+import { adminDashboardAPI } from '../../lib/api';
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -47,6 +50,16 @@ const menuItems = [
     label: 'Người dùng',
   },
   {
+    key: '/admin/posts',
+    icon: <FileTextOutlined />,
+    label: 'Bài viết',
+  },
+  {
+    key: '/admin/authors',
+    icon: <IdcardOutlined />,
+    label: 'Tác giả',
+  },
+  {
     key: '/admin/contacts',
     icon: <MailOutlined />,
     label: 'Liên hệ',
@@ -73,6 +86,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = theme.useToken();
+  const [stats, setStats] = useState({ revenue: 0, revenueThisMonth: 0 });
 
   const adminUser = useMemo(() => {
     try {
@@ -110,6 +124,27 @@ const AdminLayout = () => {
       onClick: handleLogout,
     },
   ];
+
+  useEffect(() => {
+    let mounted = true;
+    const loadStats = async () => {
+      try {
+        const res = await adminDashboardAPI.getStats();
+        if (!mounted) return;
+        setStats({
+          revenue: Number(res?.revenue || 0),
+          revenueThisMonth: Number(res?.revenueThisMonth || 0),
+        });
+      } catch {
+        // Header stats là phụ trợ: lỗi thì bỏ qua để không chặn UI.
+      }
+    };
+    loadStats();
+    return () => { mounted = false; };
+  }, [location.pathname]);
+
+  const formatCurrency = (v) =>
+    Number(v || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -204,12 +239,15 @@ const AdminLayout = () => {
       <Layout style={{ marginLeft: collapsed ? 80 : 200, transition: 'margin-left 0.2s' }}>
         <Header
           style={{
-            padding: '0 24px',
+            padding: '10px 24px',
             background: token.colorBgContainer,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: 16,
+            minHeight: 72,
+            height: 'auto',
+            lineHeight: 'normal',
             boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
             position: 'sticky',
             top: 0,
@@ -223,10 +261,19 @@ const AdminLayout = () => {
               onClick={() => setCollapsed(!collapsed)}
               style={{ fontSize: 16, width: 48, height: 48, flexShrink: 0 }}
             />
-            <div style={{ minWidth: 0 }}>
-              <Text strong style={{ fontSize: 16, display: 'block', lineHeight: 1.3 }}>
-                {pageTitle}
-              </Text>
+            <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <span
+                className="ant-typography"
+                style={{
+                  fontSize: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  height: '100%',
+                  paddingTop: '8px',
+                }}
+              >
+                <strong>{pageTitle}</strong>
+              </span>
               <Text type="secondary" style={{ fontSize: 12 }}>
                 Quản trị nội bộ · React + Ant Design
               </Text>
@@ -234,6 +281,20 @@ const AdminLayout = () => {
           </Space>
 
           <Space size="middle" style={{ flexShrink: 0 }}>
+            <Tag
+              color="gold"
+              style={{
+                padding: '6px 10px',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                lineHeight: 1.2,
+                marginInlineEnd: 0,
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Doanh thu tháng: {formatCurrency(stats.revenueThisMonth)}
+            </Tag>
             <Button type="default" icon={<HomeOutlined />} onClick={() => navigate('/')}>
               Cửa hàng
             </Button>

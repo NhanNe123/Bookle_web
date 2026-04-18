@@ -454,46 +454,49 @@ const BookManagement = () => {
     }
   };
 
-  const handlePaste = async (e) => {
-  const items = e.clipboardData.items;
-  for (let i = 0; i < items.length; i++) {
-    if (items[i].type.indexOf('image') !== -1) {
-      const blob = items[i].getAsFile();
-      if (blob) {
-        e.preventDefault();
-        // Tạo preview ngay lập tức
-        const tempUrl = URL.createObjectURL(blob);
-        setPreviewUrl(tempUrl);
-        // Upload lên server
-        await uploadCoverFromFile(blob);
-        return;
+  const handlePaste = async (e) => {
+    const cd = e.clipboardData;
+    if (!cd) return;
+
+    const items = cd.items ? Array.from(cd.items) : [];
+    for (const item of items) {
+      if (item.kind === 'file' && item.type?.startsWith('image/')) {
+        const f = item.getAsFile?.();
+        if (f && f.size > 0) {
+          e.preventDefault();
+          setPreviewFromFile(f);
+          try {
+            await uploadCoverFromFile(f);
+          } catch {
+            // message đã xử lý trong uploadCoverFromFile
+          }
+          return;
+        }
       }
     }
-  }
-};
 
-    const fileList = cd.files?.length ? Array.from(cd.files) : [];
-    const fromFiles = fileList.find((x) => x.type?.startsWith('image/') && x.size > 0);
-    if (fromFiles) {
-      e.preventDefault();
-      setPreviewFromFile(fromFiles);
-      try {
-        await uploadCoverFromFile(fromFiles);
-      } catch {
-        /* */
-      }
-      return;
-    }
+    const fileList = cd.files?.length ? Array.from(cd.files) : [];
+    const fromFiles = fileList.find((x) => x.type?.startsWith('image/') && x.size > 0);
+    if (fromFiles) {
+      e.preventDefault();
+      setPreviewFromFile(fromFiles);
+      try {
+        await uploadCoverFromFile(fromFiles);
+      } catch {
+        // message đã xử lý trong uploadCoverFromFile
+      }
+      return;
+    }
 
-    const rawText = cd.getData('text/plain') || cd.getData('text') || '';
-    const url = extractImageUrlFromPaste(rawText);
-    if (url) {
-      e.preventDefault();
-      clearPreviewBlob();
-      form.setFieldsValue({ coverImage: url });
-      setCoverPreviewError(false);
-    }
-  };
+    const rawText = cd.getData('text/plain') || cd.getData('text') || '';
+    const url = extractImageUrlFromPaste(rawText);
+    if (url) {
+      e.preventDefault();
+      clearPreviewBlob();
+      form.setFieldsValue({ coverImage: url });
+      setCoverPreviewError(false);
+    }
+  };
 
   // ── Table columns ──
   const columns = useMemo(() => [
@@ -917,4 +920,3 @@ const BookManagement = () => {
 };
 
 export default BookManagement;
-Tôi là code hãy kiểm tra logic

@@ -246,6 +246,56 @@
   text-shadow: 0 2px 8px rgba(0,0,0,0.06);
   letter-spacing: -0.02em !important;
 }
+
+/* =========================
+   Header anti-cut fixes
+   ========================= */
+
+/* Tránh cắt nội dung trong các wrapper header */
+.header-1,
+.sticky-header,
+.header-1 .mega-menu-wrapper,
+.sticky-header .mega-menu-wrapper,
+.header-1 .header-main,
+.sticky-header .header-main,
+.header-1 .container,
+.sticky-header .container,
+.header-1 .row,
+.sticky-header .row {
+  overflow: visible !important;
+}
+
+/* Giữ logo không bị đẩy xuống làm cắt khung */
+.header-1 .header-left .logo,
+.sticky-header .header-left .logo {
+  margin-bottom: 0 !important;
+}
+
+.header-1 .header-left .logo a,
+.sticky-header .header-left .logo a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 68px;
+  line-height: 1;
+}
+
+.header-1 .header-left .logo img,
+.sticky-header .header-left .logo img {
+  width: auto;
+  max-height: 52px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Trên màn nhỏ, tắt shape pseudo để tránh đè/cắt header */
+@media (max-width: 1399px) {
+  .header-1 .header-main::before,
+  .header-1 .header-main::after,
+  .sticky-header .header-main::before,
+  .sticky-header .header-main::after {
+    display: none !important;
+  }
+}
 .hero-bookle .hero-content .hero-highlight {
   color: var(--secondary-color, var(--primary-color)) !important;
   font-weight: 900 !important;
@@ -1463,6 +1513,63 @@ a:hover {
   transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--primary-color) 35%, transparent) !important;
   filter: brightness(1.1);
+}
+
+/* Action buttons on product details: clear visual hierarchy */
+.shop-details-action-row {
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.shop-details-secondary-actions {
+  min-width: min(290px, 42vw);
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-preview-btn {
+  background: color-mix(in srgb, var(--primary-color, #036280) 6%, #ffffff) !important;
+  color: var(--primary-color, #036280) !important;
+  border: 1px solid color-mix(in srgb, var(--primary-color, #036280) 38%, #ffffff) !important;
+  box-shadow: none !important;
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-preview-btn:hover {
+  background: color-mix(in srgb, var(--primary-color, #036280) 16%, #ffffff) !important;
+  border-color: var(--primary-color, #036280) !important;
+  transform: translateY(-1px);
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-ai-btn {
+  border: 1px solid transparent !important;
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-cart-btn {
+  background: var(--primary-color, var(--theme)) !important;
+  border: 1px solid var(--primary-color, var(--theme)) !important;
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--primary-color, #036280) 20%, transparent);
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-cart-btn:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-cart-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@media (max-width: 991px) {
+  .shop-details-action-row {
+    gap: 10px;
+  }
+  .shop-details-secondary-actions {
+    min-width: 0;
+    width: 100%;
+  }
+  .shop-details-wrapper .shop-details-content .cart-wrapper .theme-btn.shop-details-cart-btn {
+    width: 100%;
+  }
 }
 
 /* Feature checkmarks — dynamic primary */
